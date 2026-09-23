@@ -1,14 +1,33 @@
-# 🔌 Especificação da API REST — saude-monitor v2.0
+# 🔌 Especificação da API REST — saude-monitor v2.1
 
 > **Contratos de integração e modelo de dados MongoDB para o Clinical Sanctuary**
 >
 > | Campo | Valor |
 > |---|---|
-> | **Versão** | 2.0 |
-> | **Status** | Proposta de contrato — congelar com o time antes da implementação |
-> | **Data** | 07/08/2026 |
+> | **Versão** | 2.1 |
+> | **Status** | Contrato em validação — endpoints já implementados na `develop` (auditoria 30/08/2026); alterações refletidas neste documento e registradas por PR |
+> | **Data** | 07/08/2026 (última atualização: 06/09/2026) |
 > | **Base** | Árvore Tecnológica v2.0 (ADRs) · Documento Negocial v2.0 (RN) · Backlog v2.0 (E1–E6) |
-> | **Padrão** | REST + JSON · OpenAPI 3.1 (gerar spec a partir deste documento) |
+> | **Padrão** | REST + JSON · OpenAPI 3.1 (geração automática a partir do código proposta na E8-09, PR #88 — não incluída neste PR) |
+
+## 📌 Revisão 06/09/2026 (E8-14 — CONT-01/CONT-02)
+
+**Duas divergências entre este documento e o código, abertas desde 20/08/2026**
+(`Consolidacao-Tecnica-e-Backlog-Pendente-v1.1.md`, CONT-01/CONT-02), foram fechadas
+**alinhando o documento ao código real** — decisão do Product Owner: nenhum cliente
+real hoje depende do nome pt-BR, e mudar o código quebraria o app já em uso
+(login) ou exigiria migrar uma coleção com contas reais em produção.
+
+- **§2.2:** a coleção passa a ser chamada `users` (era `usuarios`) — é o nome real
+  em produção (`UserDocument.java: @Document(collection = "users")`), inclusive já
+  citado corretamente em §3.1 (`DELETE /contas/exclusao`, "remove `users`") antes
+  desta revisão.
+- **§3.1 (`POST /api/v1/auth/login`):** o campo do corpo da requisição passa a ser
+  `password` (era `senha`) — é o nome real em `LoginRequest.java`, já consistente
+  com o `password` usado no `POST /api/v1/auth/registro` (`UserRequest.java`,
+  documentado como herdado do DTO legado em inglês).
+
+A versão anterior (2.0) foi preservada em `_historico/Especificacao-API-v2.0.md`.
 
 ---
 
@@ -90,7 +109,7 @@
 - **Índices:** `{ "geofence": "2dsphere" }` · `{ "nome": 1 }` unique · `{ "cnpj": 1 }` unique · `{ "ativo": 1, "tipo": 1 }`
 - **Regras:** geofence é `Polygon` fechado (primeiro e último vértice iguais); tipo ∈ `PUBLICO|PRIVADO|FILANTROPICO`.
 
-### 2.2 `usuarios`
+### 2.2 `users`
 
 ```json
 {
@@ -190,36 +209,69 @@
 
 > Legenda: 🔓 público · 🔒 autenticado · 🛡️ admin/gestor
 
-### 3.1 Auth e Usuário
+> **Situação de implantação (auditoria `develop` — 30/08/2026):** 🟢 implementado · 🟡 divergente · 🔴 não implementado · Ref = PR que decidiu/materializou.
+
+| Endpoint | Situação | Ref. |
+|---|---|---|
+| `POST /api/v1/auth/registro` | 🟢 (migrado de `/api/user/cadastro`; consentimento LGPD obrigatório) | PR `contas - registro e contas` |
+| `POST /api/v1/auth/login` | 🟢 (rate limit 10/min/IP) | PR #1/#24 |
+| `POST /api/v1/auth/refresh` | 🟢 (rotação) | PR #22 |
+| `POST /api/v1/auth/logout` | 🟢 (blacklist de refresh; idempotente) | PR `feature/logout-server-revogacao-refresh` |
+| `DELETE /api/v1/contas/exclusao` | 🟢 | PR #25 |
+| `GET /api/v1/contas/feedbacks` | 🟢 | PR `contas - registro e contas` |
+| `GET /api/v1/contas/export` | 🟢 (LGPD art. 18 — portabilidade) | PR `contas - registro e contas` |
+| `PUT /api/v1/contas/consentimentos` | 🔴 agendado **Sprint S8 (E5-05)** — revogação de consentimentos via API | — |
+| `GET /api/v1/usuarios/me` | ⛔ **removido do contrato** — perfil servido no payload do login | decisão 31/08/2026 |
+| `GET /api/v1/hospitais` (+ `{id}`, `geofence`) | 🟢 | PR #12/#13 |
+| `POST/PUT/PATCH /api/v1/hospitais...` | 🟢 (ADMIN) | PR #12/#13 |
+| `GET /api/v1/hospitais/ranking` | 🟢 (backend; UI em S8) | PR #27 |
+| `POST /api/v1/hospitais/sugestoes` + moderação | 🟢 | PR #14 |
+| `POST /api/v1/visitas/checkin` · `checkout` · `heartbeat` · PATCH `tipo-permanencia` | 🟢 | PR #17/#18|
+| `GET /api/v1/visitas/ativas` · `GET /api/v1/contas/visitas` | 🟢 | PR #18/#23 |
+| `POST /api/v1/visitas/{id}/expirar` (job) | 🟢 como job interno `@Scheduled` | PR #18 |
+| `POST /api/v1/feedbacks` | 🟢 | PR #22 |
+| `GET /api/v1/visitas/{id}/feedback` · `PUT /api/v1/feedbacks/{id}` | 🟢 | PR #22 |
+| `GET /api/v1/hospitais/{id}/indicadores` | 🟢 | PR #23 |
+
+### 3.1 Auth e Conta
 
 #### `POST /api/v1/auth/registro` 🔓
-Cria conta (opcional no MVP — jornada principal funciona sem login).
+Cria conta (opcional no MVP — jornada principal funciona sem login). Substitui o antigo `POST /api/user/cadastro` (legado) e registra o consentimento LGPD no momento do cadastro.
+
+> ✅ **Situação atual (31/08/2026):** implementado. `AuthController#registro` delegou para `UserService.saveUser`, que **rejeita com 400** quando `consentimento.termosUso != true` (decisão de contrato que antes ficava implícita no `UserServiceImpl`). O app mobile usa `UserService.registro` (`frontend/src/screens/user/service/UserService.js`).
 
 **Request:**
 ```json
 {
-  "nome": "Marina Souza",
+  "fullName": "Marina Souza",
   "email": "marina@email.com",
-  "senha": "S3nh@Forte!",
-  "telefone": "(11) 99999-0000",
+  "password": "S3nh@Forte!",
+  "phone": "(11) 99999-0000",
   "consentimento": { "termosUso": true, "versaoTermos": "1.0" }
 }
 ```
+> Nota de contrato: os campos `fullName`/`password`/`phone` são herdados do `UserRequest` legado (`/api/user/cadastro`) e mantidos em inglês; o alinhamento completo do payload a camelCase pt-BR (checklist §7) segue como pendência consolidada.
+
 **201 Created**
 ```json
 {
+  "success": true,
+  "message": "Conta criada com sucesso.",
   "id": "652c9f3e1a2b3c4d5e6f7081",
-  "nome": "Marina Souza",
+  "fullName": "Marina Souza",
   "email": "marina@email.com",
-  "criadoEm": "2026-08-01T10:00:00Z"
+  "phone": "(11) 99999-0000",
+  "active": true,
+  "createdAt": "2026-08-31T10:00:00Z",
+  "updatedAt": "2026-08-31T10:00:00Z"
 }
 ```
-**Validações:** e-mail válido e único; senha ≥ 8 chars com número e letra; `consentimento.termosUso` obrigatório = true (LGPD).
+**Validações:** e-mail válido e único (`VALIDACAO` com `errors`); senha ≥ 8 chars com número e letra; `consentimento.termosUso` obrigatório = true (LGPD).
 
 #### `POST /api/v1/auth/login` 🔓
 **Request:**
 ```json
-{ "email": "marina@email.com", "senha": "S3nh@Forte!" }
+{ "email": "marina@email.com", "password": "S3nh@Forte!" }
 ```
 **200 OK**
 ```json
@@ -237,16 +289,29 @@ Cria conta (opcional no MVP — jornada principal funciona sem login).
 Rotação de refresh token (revoga o anterior).
 
 #### `POST /api/v1/auth/logout` 🔒
-**200** — invalida refresh token (blacklist).
+**Request:** `{ "refreshToken": "..." }` → **200** `{ "success": true, "message": "Sessão encerrada. Refresh token revogado." }`
+Revoga o refresh token na blacklist (`refresh_tokens_revogados`, TTL até a expiração do token), impedindo novos refreshes. Idempotente: token já expirado/malformado/revogado também responde 200.
 
-#### `DELETE /api/v1/usuarios/me` 🔒
+> ✅ **Situação atual (30/08/2026):** **implementado** (PR `feature/logout-server-revogacao-refresh`). `POST /api/v1/auth/logout` insere o `jti` do refresh na blacklist; `POST /api/v1/auth/refresh` rejeita tokens revogados (401 `NAO_AUTORIZADO`) e, na rotação, também revoga o refresh anterior. O app chama o endpoint best-effort e sempre limpa os tokens locais (`TokenStorage.limparTokens`).
+
+#### `DELETE /api/v1/contas/exclusao` 🔒
 Exclui conta e dados pessoais (LGPD). **200** com resumo do que foi removido/anonimizado.
 
-#### `GET /api/v1/usuarios/me` 🔒
-Perfil do usuário logado (dados + consentimentos).
+> ✅ **Situação atual (30/08/2026):** implementado (PR #25). Substitui o path anterior `DELETE /api/v1/usuarios/me` por clareza semântica. Cascade: remove `users`, anonimiza `visitas`/`feedbacks` (`usuarioId → null`, `anonimizado=true`) e **recalcula os agregados** afetados (job de 15min cobre falhas).
+>
+> ⚠️ **Correção (08/09/2026, auditoria de código morto):** a menção anterior a uma
+> coleção `auth_logins`/`AuthRepository.deleteByUser_Id` no cascade estava errada —
+> essa coleção nunca chegou a ser escrita em nenhum ponto do sistema (login não
+> grava trilha de auditoria própria); a chamada morta e as classes `AuthDocument`/
+> `AuthRepository` foram removidas do código nesta mesma correção. A senha vive
+> apenas como hash no próprio documento `users`, então removê-lo já é suficiente
+> para o dado de autenticação. Ver `Auditoria-Codigo-Morto-Logica-Ambigua-Erros-Silenciosos-v1.0.md`.
 
-#### `PUT /api/v1/usuarios/me/consentimentos` 🔒
-Atualiza consentimentos (ex.: revogar localização). **Request:** `{ "localizacao": { "aceito": false } }`
+#### `GET /api/v1/usuarios/me` ⛔ (removido do contrato)
+> **Decisão (31/08/2026):** removido da especificação — o perfil é servido no payload do `POST /api/v1/auth/login` e persistido localmente (`TokenStorage`). O namespace `me/` foi substituído por **`/api/v1/contas`** (responsabilidade lógica do titular) — ver §3.6.
+
+#### `PUT /api/v1/contas/consentimentos` 🔒 (agendado — Sprint S8, E5-05)
+> **Situação:** não implementado. Os consentimentos são registrados no cadastro (`/api/v1/auth/registro`); a revogação de localização no app é local/permissão do SO (E5-05). **Agendado para a Sprint S8** sob o path já renomeado para o namespace `contas`. **Request** (desenho): `{ "localizacao": { "aceito": false } }`.
 
 ---
 
@@ -307,7 +372,8 @@ Registra entrada (automática via geofence ou manual).
   "hospitalId": "652c9f3e1a2b3c4d5e6f7080",
   "origem": "GEOFENCE",
   "posicao": { "type": "Point", "coordinates": [-46.627, -23.555] },
-  "dispositivoId": "android-uuid-123" 
+  "dispositivoId": "android-uuid-123",
+  "ocorridoEm": "2026-08-07T14:03:00Z"
 }
 ```
 **201 Created**
@@ -321,8 +387,10 @@ Registra entrada (automática via geofence ou manual).
 ```
 **Regras:** valida se ponto está dentro do geofence (`$geoIntersects`) quando `origem=GEOFENCE`; se já existe visita `EM_ATENDIMENTO` no mesmo hospital, retorna a existente (idempotente); `dispositivoId` permite visita anônima (sem login).
 
+> **`ocorridoEm` (opcional, OPS-05 — 03/09/2026):** momento real da entrada, enviado quando o check-in foi detectado **sem internet** e ficou na fila offline do aplicativo. Sem ele, o evento reenviado registraria a hora em que a conexão voltou, e o tempo de permanência passaria a medir a rede do aparelho em vez da fila do hospital. O campo é opcional e **não é confiável** (o endpoint é público, OPS-03): o servidor só o aceita no passado recente — dentro da janela de 24h da RN-04, nunca no futuro além de 5 min de tolerância de relógio. Fora disso vale o relógio do servidor.
+
 #### `POST /api/v1/visitas/{id}/checkout` 🔒
-Registra saída. **Request:** `{ "posicao": {...} }` → **200**
+Registra saída. **Request:** `{ "posicao": {...}, "gpsIndisponivel": false, "encerramentoManual": false, "ocorridoEm": "2026-08-07T16:45:00Z" }` → **200**
 ```json
 {
   "id": "652c9f3e1a2b3c4d5e6f7082",
@@ -331,6 +399,7 @@ Registra saída. **Request:** `{ "posicao": {...} }` → **200**
   "status": "FINALIZADA"
 }
 ```
+> **`ocorridoEm` (opcional, OPS-05):** mesmas regras do check-in, com uma restrição a mais — a saída nunca é anterior à entrada. Um relógio atrasado no aparelho produziria duração negativa, que envenenaria a mediana de permanência (RN-15); nesse caso o servidor usa a própria entrada.
 
 #### `POST /api/v1/visitas/{id}/heartbeat` 🔒
 Sinal de vida da visita (RN-23). O app envia a cada **30 minutos** enquanto a visita está ativa (também serve de fallback quando o app está em primeiro plano). Atualiza `ultimoHeartbeat`; se a visita estava `SUSPEITA` (2h sem heartbeat), retorna ao status `EM_ATENDIMENTO`. **200** `{ "status": "EM_ATENDIMENTO", "ultimoHeartbeat": "2026-08-07T16:30:00Z" }`
@@ -341,8 +410,15 @@ Sinaliza internação/observação (RN-24) — disponível quando a visita tem �
 #### `GET /api/v1/visitas/ativas` 🔒
 Retorna visita `EM_ATENDIMENTO` do usuário (para card/cronômetro). **200** `{ "visita": {...} | null }`
 
-#### `GET /api/v1/usuarios/me/visitas` 🔒
-Histórico do usuário (paginado). **200** paginação com visita + hospital + status + feedback (se houver).
+#### `GET /api/v1/contas/visitas` 🔒
+Histórico do usuário (paginado). **200** paginação com visita + hospital + status + feedback (se houver).*Antigo `GET /api/v1/usuarios/me/visitas` — renomeado para o namespace `contas`.*
+
+```json
+{
+  "content": [ { "id": "v1", "hospital": {...}, "status": "FINALIZADA", "feedback": null } ],
+  "page": 0, "size": 20, "totalElements": 1, "totalPages": 1
+}
+```
 
 #### `POST /api/v1/visitas/{id}/expirar` 🛡️ (job interno)
 Expira visita **apenas após 24h sem heartbeat** (RN-04) — proteção contra GPS "preso", sem cortar esperas reais de 12h+. Chamado por job agendado (ex.: a cada 15min). Visitas em `SUSPEITA` há 2h são candidatas; sem heartbeat por 24h → `EXPIRADA`.
@@ -375,6 +451,28 @@ Retorna feedback da visita (se houver) — usado para edição de comentário (o
 
 #### `PUT /api/v1/feedbacks/{id}` 🔒 (dono)
 Permite editar comentário/nota dentro da janela de 24h (RN-09). **200**.
+
+#### `GET /api/v1/contas/feedbacks` 🔒
+Histórico de feedbacks do usuário (paginado, RN-22 — E5-03). Mesma paginação de `contas/visitas`; cada item traz o feedback e a visita/hospital de referência. **200** `PageResponse`.
+
+---
+
+### 3.6 Conta do titular (namespace `contas`)
+
+> Substitui o namespace `me/` por responsabilidade lógica (decisão 31/08/2026): recursos que dizem respeito ao titular autenticado vivem sob `/api/v1/contas`, não sob um path literal `me`.
+
+#### `GET /api/v1/contas/export` 🔒 (LGPD art. 18)
+Portabilidade: exporta todos os dados pessoais do titular (perfil, visitas, feedbacks e consentimentos) em um único JSON. **200**
+```json
+{
+  "geradoEm": "2026-08-31T00:00:00Z",
+  "usuario": { "id": "u1", "nome": "Marina Souza", "email": "marina@email.com", "telefone": "(11) 99999-0000", "consentimentos": {...} },
+  "visitas": [], "feedbacks": []
+}
+```
+
+#### `DELETE /api/v1/contas/exclusao` 🔒
+Vide §3.1 — exclui conta e anonimiza dados (LGPD art. 18/19), recomputando os agregados afetados.
 
 ---
 
@@ -436,7 +534,7 @@ sequenceDiagram
 | **TLS** | HTTPS obrigatório; HSTS; certificados gerenciados |
 | **JWT** | Access 15min (curto) + Refresh 30d (rotação, SecureStore no app) |
 | **CORS** | Restrito a domínios do app web (dev) |
-| **Rate limit** | Login 10/min/IP · Feedback 30/min/IP · Público 60/min/IP |
+| **Rate limit** | Login/refresh 10/min/IP (`AUTH`) · Público 60/min/IP (`PUBLICO`, inclui feedbbacks e agregados) — implementado (PR #24) |
 | **Validação** | Bean Validation em todos os DTOs; mensagens pt-BR |
 | **Logs** | Sem dados pessoais (nunca logar e-mail/senha/posição bruta); `traceId` em todas as respostas |
 | **Papéis** | `USER` (padrão) · `HOSPITAL_ADMIN` (futuro) · `ADMIN` (cadastro de hospitais) |
@@ -459,14 +557,14 @@ No MVP, esses eventos são processados **in-process** (job/`@TransactionalEventL
 
 ## 7. Checklist de congelamento do contrato
 
-- [ ] Validar nomes de campos pt-BR vs ingleses (ex.: `duracaoMinutos` vs `durationMinutes`) — **padrão adotado: camelCase pt-BR** no payload JSON, campos de domínio em pt-BR.
+- [x] Validar nomes de campos pt-BR vs ingleses (ex.: `duracaoMinutos` vs `durationMinutes`) — **padrão adotado: camelCase pt-BR** no payload JSON, campos de domínio em pt-BR; exceção mantida e agora documentada para `fullName`/`password`/`phone` (DTO legado, §3.1) e para a coleção `users` (E8-14/CONT-01/CONT-02, 06/09/2026).
 - [ ] Confirmar política de `origem=MANUAL` (check-in manual) e seus limites anti-abuso.
 - [ ] Confirmar `dispositivoId` anônimo: formato e duração de retenção (LGPD).
 - [ ] Confirmar política de heartbeat/expiração (RN-04/RN-23): intervalo de 30min, marcação `SUSPEITA` aos 2h, expiração aos 24h sem sinal — validar consumo de bateria e rede em teste de campo.
-- [ ] Decidir edição de feedback: permitida só comentário ou nota também? (Proposta: comentário editável; nota não — integridade do agregado.)
-- [ ] Gerar spec OpenAPI 3.1 a partir deste documento e versionar em `backend/src/main/resources/openapi/`.
+- [x] Decisão (PR #22): **nota e demais campos editáveis dentro da janela de 24h** (RN-09); agregado recalcula no `PUT` via evento `FeedbackSalvoEvent`.
+- [ ] Spec OpenAPI 3.1 gerada e servida em `/v3/api-docs` — proposta na E8-09 (PR #88, aberto; `springdoc-openapi` ainda não está em `develop`), direto do código, não deste documento.
 - [ ] Testes de integração por recurso no Sprint 0 (F0-03).
 
 ---
 
-*Fim da Especificação da API v2.0 — congelar com o time antes do Sprint 0.*
+*Especificação da API v2.1 — versão anterior (2.0) preservada em `_historico/`.*

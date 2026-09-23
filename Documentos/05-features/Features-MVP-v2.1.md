@@ -1,15 +1,16 @@
-# 🎯 Features do MVP — Clinical Sanctuary v2.0
+# 🎯 Features do MVP — Clinical Sanctuary v2.1
 
 > **Decomposição funcional executável do MVP — sistema de monitoramento hospitalar por geolocalização com feedback pós-atendimento**
 >
 > | Campo | Valor |
 > |---|---|
-> | **Versão** | 2.0 |
-> | **Status** | Proposta — validada contra código real em 08/08/2026 (ver `Relatorio-Aderencia-Codigo-vs-Features.md`) |
-> | **Data** | 07/08/2026 |
+> | **Versão** | 2.1 |
+> | **Status** | Vigente — revalidada contra `develop@f26666e` em **02/09/2026** (ver `Relatorio-Aderencia-Codigo-vs-Features.md` v3.5) |
+> | **Data** | 07/08/2026 · **Revisão v2.1:** 02/09/2026 |
 > | **Autor** | Gabriel Vogado (Product Owner) |
 > | **Referências** | Documento Negocial v2.0 · Backlog MVP v2.0 · Padrão UI/UX v2.0 · Árvore Tecnológica v2.0 |
-> | **Arquivo-irmão** | `Backlog-MVP-v2.0.md` — estórias detalhadas com critérios de aceite atômicos |
+> | **Arquivo-irmão** | `Backlog-MVP-v2.1.md` — estórias detalhadas com critérios de aceite atômicos |
+> | **O que mudou na v2.1** | Os status de código estavam **congelados em 08/08/2026** e descreviam como "Inexistente" features hoje entregues (F-01, F-03, F-04, F-05, F-06) e como "Não conforme" a segurança já corrigida na Fase 0 (F-09). A v2.1 realinha os 11 status ao código, registra a decisão de **adiar o Painel Admin (F-11)** e acrescenta o **§2.1 — Estado operacional**, que separa "implementado" de "utilizável em campo". |
 > | **Relatório de aderência** | `Relatorio-Aderencia-Codigo-vs-Features.md` — mapeamento completo do código existente × features |
 
 ---
@@ -26,17 +27,42 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 
 | Feature ID | Nome | Épico(s) | Prioridade | Status Código | Estórias vinculadas | RN principais | Esforço |
 |---|---|---|---|---|---|---|---|
-| **F-01** | Cadastro e gestão de hospitais | Épico 1 | P0 | 🔴 Inexistente | E1-01, E1-02, E1-03, E1-04 | — | M (16) |
-| **F-02** | Autenticação e conta do usuário | Fase 0 + Épico 5 | P0 | 🟡 Parcial | F0-01, F0-02, F0-05, E5-04, E5-03 | RN-20, RN-21, RN-22 | M (18) |
-| **F-03** | Detecção automática de entrada/saída | Épico 2 | P0 | 🔴 Inexistente | E2-01, E2-02, E2-03, E2-04, E2-05, E2-09 | RN-01..RN-07, RN-23 | L (19) |
-| **F-04** | Visita ativa e cronômetro | Épico 2 | P0 | 🔴 Inexistente | E2-06, E2-07, E2-08, E2-10 | RN-07, RN-24 | M (21) |
-| **F-05** | Feedback pós-saída | Épico 3 | P0 | 🔴 Inexistente | E3-01, E3-02, E3-03, E3-04, E3-05, E3-06 | RN-08..RN-13 | M (16) |
-| **F-06** | Indicadores públicos por hospital | Épico 4 | P0 | 🔴 Inexistente | E4-01, E4-02, E4-03, E4-04, E4-05 | RN-14..RN-19 | M (20) |
-| **F-07** | Mapa e busca de hospitais | Épico 1 + Épico 6 | P0 | 🟡 Parcial | E1-03, E1-05, E6-01 | — | S (8) |
-| **F-08** | Polimento e acessibilidade | Épico 6 | P1 | 🟡 Parcial | E6-02, E6-03, E6-04, E6-05 | — | M (20) |
-| **F-09** | Segurança e privacidade | Fase 0 + Épico 5 | P0 | 🔴 Não conforme | F0-03, F0-04, E5-01, E5-02, E5-05 | RN-21, RNF-05, RNF-06 | M (18) |
+| **F-01** | Cadastro e gestão de hospitais | Épico 1 | P0 | ✅ Funcional | E1-01, E1-02, E1-03, E1-04 | — | M (16) |
+| **F-02** | Autenticação e conta do usuário | Fase 0 + Épico 5 | P0 | ✅ Funcional | F0-01, F0-02, F0-05, E5-04, E5-03 | RN-20, RN-21, RN-22 | M (18) |
+| **F-03** | Detecção automática de entrada/saída | Épico 2 | P0 | ✅ Funcional | E2-01, E2-02, E2-03, E2-04, E2-05, E2-09 | RN-01..RN-07, RN-23 | L (19) |
+| **F-04** | Visita ativa e cronômetro | Épico 2 | P0 | ✅ Funcional | E2-06, E2-07, E2-08, E2-10 | RN-07, RN-24 | M (21) |
+| **F-05** | Feedback pós-saída | Épico 3 | P0 | ✅ Funcional | E3-01, E3-02, E3-03, E3-04, E3-05, E3-06 | RN-08..RN-13 | M (16) |
+| **F-06** | Indicadores públicos por hospital | Épico 4 | P0 | ✅ Funcional (exceto E4-06) | E4-01, E4-02, E4-03, E4-04, E4-05 | RN-14..RN-19 | M (20) |
+| **F-07** | Mapa e busca de hospitais | Épico 1 + Épico 6 | P0 | ✅ Funcional | E1-03, E1-05, E6-01 | — | S (8) |
+| **F-08** | Polimento e acessibilidade | Épico 6 | P1 | 🟡 Funcional, não auditado | E6-02, E6-03, E6-04, E6-05 | — | M (20) |
+| **F-09** | Segurança e privacidade | Fase 0 + Épico 5 | P0 | ✅ Conforme | F0-03, F0-04, E5-01, E5-02, E5-05 | RN-21, RNF-05, RNF-06 | M (18) |
+| **F-10** | Moderação de sugestões de hospitais | Épico 1 | P1 | ✅ Backend funcional · telas mobile removidas (08/09/2026) | E1-06 | — | S (5) |
+| **F-11** | Painel Administrativo Web (hospitais + georreferenciamento) | Épico 7 | **P2 — adiada** | 🔴 Inexistente | E7-01..E7-09 | — | L (25) |
 
-> **Legenda de status:** ✅ Existente (funcional) · 🟡 Parcial (precisa refatoração) · 🔴 Inexistente/Inexistente (construir do zero) · 🔴 Não conforme (violação de segurança/LGPD — corrigir antes de qualquer deploy). Verificação completa: `Relatorio-Aderencia-Codigo-vs-Features.md`.
+> **Legenda de status:** ✅ Funcional (implementado e coberto por teste automatizado) · 🟡 Funcional com ressalva (implementado, mas sem a auditoria/validação exigida pelo DoD) · 🔴 Inexistente (construir do zero). Verificação arquivo a arquivo: `Relatorio-Aderencia-Codigo-vs-Features.md` (v3.5).
+
+> ⚠️ **Status de código ≠ status de produto.** As 10 features marcadas ✅/🟡 acima estão implementadas e testadas em CI, mas o sistema **não passou por validação em campo** e apresenta um problema de desempenho que impede o uso real. Leia o **§2.1** antes de tratar qualquer ✅ desta tabela como "pronto para o usuário".
+
+---
+
+## 2.1 Estado operacional (02/09/2026) — implementado ≠ utilizável
+
+> Registro do que foi observado no ambiente de desenvolvimento, relatado pelo Product Owner em 02/09/2026 e confirmado por medição direta contra `https://saude-monitor.onrender.com`:
+>
+> *"haviam muitos bugs e o Sistema está muito lento para abrir, trazer e enviar dados pelo sistema. Carregamento de lista está lento, login está lento, envio de feedback está lento, cadastro está lento, enfim, o sistema ainda não está pronto para realizar testes de campo."*
+
+**Medição do backend (02/09/2026, `curl`, rede residencial):**
+
+| Requisição | TTFB | Observação |
+|---|---|---|
+| `GET /actuator/health` — 1ª chamada após ociosidade | **109,1 s** (HTTP **503**) | Cold start do serviço no plano `free` do Render |
+| `GET /actuator/health` — serviço quente | **2,5 – 3,2 s** | Health check não consulta dados de negócio; a latência é da instância |
+| `GET /api/v1/hospitais?page=0&size=20` — serviço quente | **1,9 – 4,9 s** (35 KB) | Primeira chamada após o warm-up é a mais lenta |
+| `POST /api/v1/auth/login` — payload inválido (400, sem acesso ao banco) | **1,0 s** | Piso de latência por requisição, só pipeline HTTP |
+
+**Leitura:** a lentidão é **transversal a todas as telas** (login, lista, cadastro, feedback) porque a causa é comum a todas — a **instância do backend**, não o cliente. O plano `free` do Render suspende o serviço após ~15 min sem tráfego (daí os 109 s da primeira abertura) e entrega uma fração de vCPU compartilhada (daí ~1 s de piso por requisição mesmo sem tocar o banco). Otimizar renderização de lista ou memoização no app **não resolve** nenhum dos quatro sintomas relatados.
+
+**Consequência para este documento:** as validações **V-01 a V-09 do §11 estão bloqueadas** até que o desempenho seja corrigido — não é possível medir precisão de geofence, consumo de bateria ou usabilidade sobre uma API que responde em segundos e cai em 503 na primeira abertura. O tratamento está no **Épico 8** (`Backlog-MVP-v2.1.md`) e na **Sprint S9** (`Plano-Sprints-v2.1.md`).
 
 > **Nota sobre prioridades:** P0 = MVP obrigatório (sem isso o produto não cumpre a proposta de valor); P1 = fortemente recomendado no MVP (qualidade percebida e retenção); P2 = pós-MVP. F-08 (Polimento) é P1 porque o produto funciona sem design system refinado, mas a experiência do paciente exige cuidado visual e acessibilidade como diferencial.
 
@@ -51,7 +77,7 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 - **ID:** F-01
 - **Épico:** Épico 1 — Cadastro de Hospitais e Geofences
 - **Prioridade:** P0 — sem hospital cadastrado não há geofence, sem geofence não há detecção de visita
-- **Status de implementação:** 🔴 **Inexistente** — zero arquivos backend, zero arquivos frontend. Nenhum endpoint, documento MongoDB, controller, serviço ou tela foi implementado. Construção total do zero. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-01)
+- **Status de implementação:** ✅ **Funcional** — módulo `hospital` completo no backend (`HospitalDocument` com `Point`/`Polygon` GeoJSON, índice `2dsphere`, `HospitalController` com CRUD REST, escritas protegidas por `hasRole("ADMIN")`) e **340 hospitais importados** do CNES/DATASUS. A listagem pública e o detalhe existem no app (`HospitaisScreen`, `HospitalDetalheScreen`). O **cadastro/edição por interface** não existe no mobile por decisão de produto — é responsabilidade do Painel Admin Web (**F-11, adiada**); até lá, a gestão é feita por API. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-01)
 - **Descrição:** Esta feature fornece o backoffice administrativo para cadastrar hospitais no sistema, com seus dados cadastrais (nome, CNPJ, endereço, tipo público/privado) e — crucialmente — a definição da **área geográfica (geofence)** como polígono GeoJSON desenhado sobre o mapa. É o alicerce de todo o produto: toda detecção de entrada/saída, todo feedback e todo indicador público dependem de um hospital com geofence correto.
 
   O cadastro é exclusivo de administradores (não acessível ao público). O endpoint público de listagem retorna apenas hospitais ativos com seus geofences, para que o app mobile possa detectar entrada. A edição e desativação são imediatas — desativar um hospital remove-o da listagem pública no ato (visitas em andamento não são afetadas, apenas não se iniciam novas).
@@ -81,7 +107,7 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 - **ID:** F-02
 - **Épico:** Fase 0 (Estabilização e Segurança) + Épico 5 (Conta, Consentimento e Privacidade)
 - **Prioridade:** P0 — endpoints protegidos não podem existir sem autenticação; senha em texto puro é bloqueante de segurança
-- **Status de implementação:** 🟡 **Parcial** — 7 arquivos backend + 4 frontend existem (login/cadastro funcionais), mas **senha salva em texto puro** (`AuthServiceImpl.java`) e **sem emissão de JWT** — o login apenas grava um documento MongoDB sem token. Frontend tem LoginScreen e UserScreen funcionais, mas sem SecureStore/JWT. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-02)
+- **Status de implementação:** ✅ **Funcional** — Fase 0 (JWT + BCrypt + refresh com rotação e blacklist de revogação + rate limit) e Épico 5 completos. Namespace do titular **`/api/v1/contas`**: `GET /contas/visitas`, `GET /contas/feedbacks`, `GET /contas/export` (JSON), **`GET /contas/export/pdf`** (S8 — LGPD art. 18 em documento legível pelo cidadão, OpenPDF), `PUT /contas/consentimentos` e `DELETE /contas/exclusao`. Cadastro em `POST /api/v1/auth/registro` com `consentimento` obrigatório. **UI de histórico e exportação entregues na S8** (`HistoricoScreen` + download/compartilhamento do PDF). (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-02)
 - **Descrição:** Esta feature implementa a base de segurança do sistema e a experiência de conta do usuário. No backend: hash BCrypt para senhas, emissão de JWT (access token 15 min + refresh token 30 dias), proteção de endpoints e exclusão de conta conforme LGPD. No app: fluxo de cadastro/login **opcional** (o usuário pode usar toda a jornada principal sem conta), tela de perfil com dados pessoais e histórico.
 
   A conta é um **acelerador de retenção**, não um gate: o usuário cria quando quiser consultar seu histórico ou gerenciar preferências. O feedback anônimo (sem login) continua funcionando — o vínculo ao usuário logado é interno e nunca exposto publicamente. O JWT é armazenado no dispositivo via `expo-secure-store`.
@@ -112,7 +138,7 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 - **ID:** F-03
 - **Épico:** Épico 2 — Detecção de Visitas (Geofence)
 - **Prioridade:** P0 — é o core do produto. Sem detecção automática, o app vira um formulário manual de pesquisa de satisfação
-- **Status de implementação:** 🔴 **Inexistente** — o frontend tem `GeoLocalizacaoScreen` com `watchPositionAsync` (GPS contínuo, drena bateria), mas **nenhum geofencing nativo**, zero endpoints de checkin/checkout no backend, zero queries geoespaciais, zero índice 2dsphere. O que existe precisa ser **totalmente substituído** por `startGeofencingAsync` + `expo-task-manager`. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-03) (commodity).
+- **Status de implementação:** ✅ **Funcional** — o `watchPositionAsync` contínuo foi substituído por **geofencing nativo** (`startGeofencingAsync` + `expo-task-manager`) conforme previsto. Backend com módulo `visita` (`checkin`/`checkout`/`heartbeat`), queries geoespaciais e índice `2dsphere`; jobs `@Scheduled` para expiração por 24h sem heartbeat (E2-03), conflito de geofences sobrepostos por menor distância (E2-04) e tolerância de 10 min a GPS interrompido (E2-05). **Ressalva:** a calibragem de raio e tolerâncias depende do teste de campo **V-01, hoje bloqueado (§2.1)**. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-03)
 - **Descrição:** Esta feature implementa o motor de geofencing que detecta quando o usuário **entra** e **sai** da área de um hospital, sem nenhuma ação manual. No dispositivo, utiliza `expo-location.startGeofencingAsync()` + `expo-task-manager` para monitorar regiões em background (substituindo o `watchPositionAsync` contínuo atual que drena bateria). No backend, expõe endpoints para registrar eventos de entrada/saída (`POST /api/v2/visitas/entrada`, `POST /api/v2/visitas/{id}/saida`) e executa um job de expiração para visitas "presas".
 
   As regras de tolerância são fundamentais:
@@ -153,12 +179,12 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 - **ID:** F-04
 - **Épico:** Épico 2 — Detecção de Visitas
 - **Prioridade:** P0 — a experiência de "estou sendo monitorado sem fazer nada" é o principal diferencial do produto
-- **Status de implementação:** 🔴 **Inexistente** — zero arquivos backend e frontend. Nenhuma coleção `visitas` no MongoDB, nenhum endpoint de heartbeat/tipo-permanencia, nenhum card de visita ativa no app, nenhum cronômetro, nenhuma pergunta de internação. Depende de F-03 (geofence). (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-04)
-- **Descrição:** Esta feature implementa a **camada de experiência** sobre a detecção de geofence (F-03). Enquanto F-03 é o motor, F-04 é o painel: o card de permanência ativa que aparece sobre o mapa com o nome do hospital e o cronômetro ao vivo, a opção de check-in manual quando o GPS falha, o filtro de visitas muito curtas nas estatísticas, e a sinalização de internação/observação para evitar que longas permanências hospitalares (ex.: paciente internado por 5 dias) distorçam o indicador de "tempo de atendimento".
+- **Status de implementação:** ✅ **Funcional** — coleção `visitas`, endpoints de heartbeat e `tipo-permanencia`, card de visita ativa com cronômetro na Home, check-in manual em 1 toque na lista de hospitais, filtro de visitas < 2 min na agregação (RN-07) e prompt de internação/observação após 12h (RN-24). A regra **RN-03A (exclusividade de visita ativa)** foi acrescentada em 01/09/2026 — ver `Registro-Correcao-Checkin-Manual-e-Performance-v1.0.md`. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-04)
+- **Descrição:** Esta feature implementa a **camada de experiência** sobre a detecção de geofence (F-03). Enquanto F-03 é o motor, F-04 é o painel: o card de permanência ativa que aparece sobre o mapa com o nome do hospital e o cronômetro ao vivo, o check-in manual em 1 toque (caminho de primeira classe), o filtro de visitas muito curtas nas estatísticas, e a sinalização de internação/observação para evitar que longas permanências hospitalares (ex.: paciente internado por 5 dias) distorçam o indicador de "tempo de atendimento".
 
   O cartão de visita ativa (`CSGeoStatusCard`) é o elemento central da UX: glass sobre o mapa, com ícone pulsante, timer em `display-sm` Manrope com tabular-nums, e botão "Não estou aqui / Encerrar". Ele aparece automaticamente na detecção de entrada (F-03) e some na saída. O timer é acessível: `accessibilityLiveRegion="polite"` anuncia o tempo a cada minuto.
 
-  O check-in manual (1 toque) é o **plano B de dignidade**: se o GPS estiver desligado ou a permissão negada, o usuário ainda pode registrar sua visita selecionando o hospital da lista. Visitas manuais recebem flag `manual = true`.
+  O check-in manual (1 toque) é um **caminho de primeira classe**, ao lado do automático: o usuário seleciona o hospital na lista e registra a visita, típico quando o GPS está desligado, a permissão foi negada ou em iOS restritivo. Visitas manuais recebem flag `manual = true`.
 
   A sinalização de internação (RN-24) aparece após 12h de visita ativa: um prompt de 1 toque pergunta "Você está em observação ou internado?". Se sim, a visita é excluída do indicador de pronto-atendimento mas permanece no histórico pessoal.
 
@@ -189,10 +215,57 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 - **ID:** F-05
 - **Épico:** Épico 3 — Feedback Pós-Saída
 - **Prioridade:** P0 — o feedback é o dado que alimenta o valor público do produto. Sem feedback, não há indicadores.
-- **Status de implementação:** 🔴 **Inexistente** — zero arquivos. Nenhuma coleção `feedbacks`, nenhum endpoint, nenhum formulário no app, nenhuma notificação pós-saída (`expo-notifications` nem instalado). Depende de F-03 (saída detectada) e F-04 (visita finalizada). (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-05)
-- **Descrição:** Esta feature implementa o **formulário de feedback pós-saída** completo: notificação local, formulário de 4 perguntas respondível em < 45 segundos, envio ao backend, bloqueio de duplicatas, e tela de agradecimento. É o momento de verdade onde o app pede a opinião do usuário — e a regra de ouro é: **não ser cansativo**.
+- **Status de implementação:** ✅ **Funcional** — coleção `feedbacks` com índice único por `visitaId` (RN-12), fluxo anônimo (`usuarioId` nulo), notificação local pós-saída (`expo-notifications`) e o **formulário ramificado de 4 telas** conforme E3-02: triagem → especialidade (select searchable, pulada quando triagem ≠ Sim) → tratamento pela equipe com a opção **"Não interagi"** → nota geral e comentário. Lembrete único agendado em **~6h** (E3-03, RN-09) e job `SEM_FEEDBACK` após 24h. Os três desvios de RN apontados na v2.0 foram corrigidos. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-05)
+- **Descrição:** Esta feature implementa o **formulário de feedback pós-saída** completo: notificação local, formulário ramificado de até 4 telas respondível em < 45 segundos, envio ao backend, bloqueio de duplicatas, e tela de agradecimento. É o momento de verdade onde o app pede a opinião do usuário — e a regra de ouro é: **não ser cansativo**.
 
-  O fluxo começa quando a visita é encerrada (F-03): o app aguarda de 1 a 5 minutos (configurável) e dispara uma notificação local. Essa espera é deliberada — evita pedir feedback com o usuário ainda no estacionamento ou dentro do transporte. O formulário tem 4 passos com barra de progresso visível e botão "Pular" sempre presente. O envio é possível com apenas a nota geral respondida.
+  O fluxo começa quando a visita é encerrada (F-03): o app aguarda de 1 a 5 minutos (configurável) e dispara uma notificação local. Essa espera é deliberada — evita pedir feedback com o usuário ainda no estacionamento ou dentro do transporte. O formulário tem **fluxo ramificado invisível** com até 4 telas (máx.) e barra de progresso visível + botão "Pular" sempre presente. O envio é possível com apenas a nota geral respondida (Tela 4).
+
+  **Estrutura do fluxo (RN-10) — 4 telas ramificadas, < 45s:**
+  - **Tela 1 — Triagem:** "Você passou pela triagem ao chegar na unidade?"
+    - ✅ Sim → **Tela 2**
+    - ❌ Não → **Tela 3** (pula especialidade)
+  
+  - **Tela 2 — Especialidade procurada + Atendimento** (só se triagem = Sim)
+    - "Qual especialidade você procurava?" → select searchable (lista CNES/DATASUS)
+    - "Conseguiu ser atendido por médico(a) desta especialidade?"
+      - ✅ Sim → **Tela 3**
+      - ❌ Não → **motivo** (radio obrigatório):
+        - 🔴 **LOTACAO** — Superlotação / espera excessiva
+        - 👨‍⚕️ **FALTA_MEDICO** — Falta de médico na especialidade
+        - ⚪ **CLASSIFICACAO_RISCO** — Prioridade a casos mais graves (Protocolo Manchester: Vermelho/Laranja)
+        - 🚪 **OUTRO** — campo curto opcional
+    - → **Tela 3**
+  
+  - **Tela 3 — Tratamento pela equipe** (sempre exibida)
+    - "Como foi o tratamento dos funcionários da unidade com você?"
+    - Escala 5 pontos + "Não interagi": Muito bem / Bem / Regular / Mal / Muito mal / Não interagi
+    - → **Tela 4**
+  
+  - **Tela 4 — Nota geral + Comentário** (sempre exibida)
+    - "De 1 a 5, como avalia sua experiência geral hoje?" → ★★★★★
+    - "Quer deixar algum comentário?" (opcional, max 500 chars)
+    - Botão "Enviar"
+
+  **Regras transversais do fluxo:**
+  - `especialidadeProcurada` **sempre capturada** se triagem = Sim (mesmo se não atendido) → permite indicador de "falta de médico por especialidade"
+  - `motivoNaoAtendido = CLASSIFICACAO_RISCO` **não é gap** — card "Fluxo Correto" no painel admin (verde)
+  - `motivoNaoAtendido = FALTA_MEDICO` → gap RH (vermelho no painel)
+  - `motivoNaoAtendido = LOTACAO` → gap Capacidade/Fluxo (laranja no painel)
+  - **Frontend mostra label amigável** `CASOS_MAIS_GRAVES_PRIORIDADE`; **backend normaliza para** `CLASSIFICACAO_RISCO`
+  - Comentário opcional único no final; zero caixas de texto obrigatórias
+  - Persistência local a cada tela; envio único no final (`POST /api/v1/feedback` com `visitaId`)
+  - **Tela 2 — Especialidade + Atendimento (só se triagem=Sim):** "Qual especialidade você procurava?" → select searchable (lista CNES/DATASUS) + "Conseguiu ser atendido por médico(a) desta especialidade?" → Sim → Tela 3 | Não → motivo (radio obrigatório: LOTACAO | FALTA_MEDICO | CLASSIFICACAO_RISCO | OUTRO) → Tela 3
+  - **Tela 3 — Tratamento pela equipe (sempre):** "Como foi o tratamento dos funcionários da unidade com você?" → Escala 5 pts + "Não interagi" (Muito bem / Bem / Regular / Mal / Muito mal / Não interagi) → Tela 4
+  - **Tela 4 — Nota geral + Comentário (sempre):** "De 1 a 5, como avalia sua experiência geral hoje?" → ★★★★★ + "Quer deixar algum comentário?" (opcional, max 500 chars) → Enviar
+
+  **Regras transversais (RN-10):**
+  - `especialidadeProcurada` **sempre capturada** se triagem = Sim (mesmo se não atendido) → permite indicador de "falta de médico por especialidade"
+  - `motivoNaoAtendido = CLASSIFICACAO_RISCO` **não é gap** — card "Fluxo Correto" no painel admin (verde)
+  - `motivoNaoAtendido = FALTA_MEDICO` → gap RH (vermelho no painel)
+  - `motivoNaoAtendido = LOTACAO` → gap Capacidade/Fluxo (laranja no painel)
+  - Frontend mostra label amigável `CASOS_MAIS_GRAVES_PRIORIDADE`; backend normaliza para `CLASSIFICACAO_RISCO`
+  - Comentário opcional único no final; zero caixas de texto obrigatórias
+  - Persistência local a cada tela; envio único no final (`POST /api/v1/feedback` com `visitaId`)
 
   A janela de resposta é de 24 horas, com no máximo 1 lembrete (aproximadamente 6h após a primeira notificação). Após 24h, a visita recebe status `SEM_FEEDBACK` e o usuário nunca mais é incomodado por aquela visita. O feedback é anônimo por padrão: `usuario_id` pode ser nulo.
 
@@ -202,12 +275,16 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 - **Critérios de aceite:**
   1. Notificação local é disparada entre 1 e 5 minutos após o registro de saída; delay é configurável; notificação nunca dispara enquanto o usuário está dentro de qualquer geofence hospitalar
   2. Toque na notificação (ou no card da home) abre o formulário `CSFeedbackForm` em tela cheia
-  3. Formulário tem 4 passos com barra de progresso (altura 4px, track `surface-container-high`, fill gradiente primário) + label "Passo X de 4" + botão "Pular" sempre visível
-  4. **Passo 1:** "Você foi atendido?" — 3 chips: "Sim, fui atendido" / "Sim, mas desisti" / "Não fui atendido". Se "Não fui atendido", pula direto para a nota geral
-  5. **Passo 2:** "Teve médico disponível?" — chips: Sim / Não / Não precisei
-  6. **Passo 3:** "Fez triagem?" — chips: Sim / Não / Não sei
-  7. **Passo 4:** "Como você avalia o atendimento?" — `CSRatingStars` 5 estrelas (32×32, área de toque 48) com labels âncora (1 "Péssimo" … 5 "Excelente") + chips de medicação/receita ("Recebi" / "Não recebi" / "Não precisei") + campo de comentário opcional (máx. 280 caracteres)
-  8. Todas as perguntas são puláveis; envio é possível com ao menos a nota geral (Passo 4) respondida; botão "Enviar avaliação" (`CSButtonPrimary`) envia em 1 toque
+  3. Formulário tem fluxo ramificado de até 4 telas com barra de progresso (altura 4px, track `surface-container-high`, fill gradiente primário) + label "Passo X de 4" + botão "Pular" sempre visível
+  4. **Tela 1 — Triagem:** "Você passou pela triagem ao chegar na unidade?" — 2 chips: "Sim" / "Não". Se "Não", pula direto para Tela 3 (Tratamento)
+  5. **Tela 2 — Especialidade + Atendimento** (apenas se Tela 1 = Sim): "Qual especialidade você procurava?" → select searchable (lista CNES/DATASUS) + "Conseguiu ser atendido por médico(a) desta especialidade?" → chips: Sim / Não. Se Não → radio obrigatório de motivo:
+     - 🔴 **LOTACAO** — Superlotação / espera excessiva
+     - 👨‍⚕️ **FALTA_MEDICO** — Falta de médico na especialidade
+     - ⚪ **CLASSIFICACAO_RISCO** — Prioridade a casos mais graves (Protocolo Manchester: Vermelho/Laranja)
+     - 🚪 **OUTRO** — campo curto opcional
+  6. **Tela 3 — Tratamento pela equipe** (sempre exibida): "Como foi o tratamento dos funcionários da unidade com você?" → chips: Muito bem / Bem / Regular / Mal / Muito mal / Não interagi
+  7. **Tela 4 — Nota geral + Comentário** (sempre exibida): `CSRatingStars` 5 estrelas (32×32, área de toque 48) com labels âncora (1 "Péssimo" … 5 "Excelente") + campo de comentário opcional (máx. 500 caracteres)
+  8. Todas as perguntas são puláveis; envio é possível com ao menos a nota geral (Tela 4) respondida; botão "Enviar avaliação" (`CSButtonPrimary`) envia em 1 toque
   9. Tempo total de resposta ≤ 45 segundos (medido em teste de usabilidade com usuários reais)
   10. Após envio: tela `CSFeedbackThanks` com ícone `HeartHandshake`, mensagem de agradecimento e link para ver avaliação pública do hospital
   11. Feedback armazenado no backend com `visita_id` único; tentativa de reenvio retorna mensagem amigável "Você já avaliou esta visita"
@@ -216,16 +293,18 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
   14. Em caso de erro de rede no envio: toast "Sem conexão — salvaremos e enviaremos depois"; respostas mantidas localmente; reenvio automático ao reconectar
 - **Regras de negócio aplicáveis:** RN-08, RN-09, RN-10, RN-11, RN-12, RN-13
 - **Dependências:** **F-03 (Detecção de saída)** — o feedback é consequência da visita encerrada. **F-01 (Hospitais)** — o feedback referencia `hospital_id`. Pode ser desenvolvida em paralelo com F-04 (ambas consomem F-03).
-- **Esforço estimado:** **M** (1-2 sprints). Justificativa: UI de formulário multi-step com animações e acessibilidade é trabalho médio de frontend; backend é essencialmente 1 endpoint `POST /feedback` + validação de dedupe. A complexidade está na UX do formulário (tempo < 45s, pulável, micro-interações) e na lógica de notificação (delay 1-5min + lembrete 6h + expiração 24h). Estórias: 6.
+- **Esforço estimado:** **M** (1-2 sprints). Justificativa: UI de formulário multi-step ramificado com animações e acessibilidade é trabalho médio de frontend; backend é essencialmente 1 endpoint `POST /feedback` + validação de dedupe. A complexidade está na UX do formulário (tempo < 45s, pulável, ramificação invisível, micro-interações) e na lógica de notificação (delay 1-5min + lembrete 6h + expiração 24h). Estórias: 6.
 - **Riscos:**
-  - **Baixa taxa de resposta:** se o formulário for percebido como cansativo, a taxa de resposta cai abaixo de 25%. Mitigação: 4 perguntas é o limite; botão "Pular" sempre visível reduz ansiedade; notificação no momento certo (1-5 min pós-saída); feedback anônimo remove barreira de login.
+  - **Baixa taxa de resposta:** se o formulário for percebido como cansativo, a taxa de resposta cai abaixo de 25%. Mitigação: 4 telas é o limite; botão "Pular" sempre visível reduz ansiedade; notificação no momento certo (1-5 min pós-saída); feedback anônimo remove barreira de login.
   - **Usuário ignora a notificação:** notificações locais têm baixa taxa de abertura em alguns perfis de usuário. Mitigação: além da notificação, um card na home do app ("Você visitou o Hospital X — quer avaliar?") serve como segundo canal; 1 lembrete máximo.
   - **Feedback malicioso:** usuários podem avaliar mal um hospital repetidamente. Mitigação: 1 feedback por visita (dedupe por `visita_id` único); visitas < 2 min não geram convite de feedback; para o MVP, moderação humana de outliers é suficiente (fase 2 implementa detecção automatizada).
+  - **Select CNES/DATASUS lento:** lista de especialidades pode ser grande. Mitigação: cache local da lista CNES/DATASUS; debounce no searchable select; carregamento preguiçoso.
 - **Critério de pronto (DoD específico):**
   - **Validação com usuário real:** teste de usabilidade com ≥ 10 pacientes/acompanhantes recém-saídos de hospital real — medir: (a) tempo médio de resposta ≤ 45s, (b) taxa de abandono no meio do formulário ≤ 20%, (c) compreensão das perguntas sem hesitação, (d) NPS do formulário ≥ 8
   - Teste de notificação: verificar que a notificação dispara no delay configurado e que o lembrete único aparece ~6h depois
   - Teste de dedupe: tentar enviar 2 feedbacks para a mesma visita — segundo retorna erro amigável
-  - Acessibilidade: formulário navegável por TalkBack/VoiceOver; estrelas respondem a swipe; chips são `role="checkbox"`
+  - Acessibilidade: formulário navegável por TalkBack/VoiceOver; estrelas respondem a swipe; chips são `role="checkbox"`; ramificação invisível não confunde leitores de tela
+  - **Enum backend:** `MotivoNaoAtendido` com valores `FALTA_MEDICO`, `LOTACAO`, `CLASSIFICACAO_RISCO`, `OUTRO` implementado e testado
 
 ---
 
@@ -234,7 +313,7 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 - **ID:** F-06
 - **Épico:** Épico 4 — Indicadores Públicos por Hospital
 - **Prioridade:** P0 — é o valor de utilidade pública que justifica o app para quem não está visitando um hospital no momento
-- **Status de implementação:** 🔴 **Inexistente** — zero arquivos. Nenhuma coleção `agregados_hospitais`, nenhum job de agregação, nenhum endpoint de indicadores/ranking, nenhuma tela de detalhe público do hospital. Depende de F-03/F-04 (visitas) e F-05 (feedbacks). (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-06)
+- **Status de implementação:** ✅ **Funcional (exceto E4-06)** — coleção `agregados_hospitais`, job de recálculo em ≤ 15 min, `GET /hospitais/{id}/indicadores` com corte de N ≥ 5 (RN-15), mediana de tempo excluindo internação/observação (RN-16/RN-17/RN-24) e `GET /hospitais/ranking` com ordenação por NOTA/TEMPO, filtro por tipo e paginação. A **UI do ranking** (`RankingScreen`) foi entregue na S8. Pendente apenas **E4-06 (tendência simples)**, classificada P2 e não planejada para o MVP. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-06)
 - **Descrição:** Esta feature agrega os dados de visitas e feedbacks e os transforma em **indicadores públicos**: nota média (1–5) e tempo médio de atendimento (mediana em minutos) por hospital. É o que o cidadão consulta para decidir onde buscar atendimento. A transparência metodológica é parte do design: a tela pública sempre mostra o período da amostra (últimos 90 dias), N de avaliações, e data da última atualização.
 
   O cálculo segue regras estatísticas rigorosas:
@@ -276,14 +355,14 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 - **ID:** F-07
 - **Épico:** Épico 1 (Listagem) + Épico 6 (Navegação)
 - **Prioridade:** P0 — é a porta de entrada para consulta pública; sem mapa, o cidadão não descobre hospitais próximos
-- **Status de implementação:** 🟡 **Parcial** — `GeoLocalizacaoScreen` já renderiza `MapView` + `Marker` da posição do usuário com `react-native-maps` instalado. Mas **não exibe hospitais** (zero marcadores de hospital, zero polígonos de geofence), não tem busca por nome/tipo, e o GPS é modo contínuo (será substituído por geofencing em F-03). Aproveita-se o MapView e a estrutura de tela; o resto é novo. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-07)
-- **Descrição:** Esta feature implementa as telas de descoberta de hospitais: o **mapa** interativo com pins de hospitais e posição do usuário, a **lista** com busca por nome e ordenação, e a **navegação inferior** (Bottom Tabs) que organiza o app em 3 abas: Mapa, Hospitais e Perfil. A migração de Drawer (atual) para Bottom Tabs é parte desta feature, pois a navegação de 1 polegar é mandatória para a persona paciente (mãos ocupadas, pressa, uma mão só).
+- **Status de implementação:** ✅ **Funcional** — o mapa exibe hospitais ativos como pins e **os polígonos das geofences**, com filtro por raio, busca por nome e ordenação na lista, e o empty state com CTA "Sugerir hospital" (E1-05). A navegação migrou de Drawer para **Bottom Tabs de 4 abas** (Início, Hospitais, Mapa, Perfil). ⚠️ **Correção de contrato:** a biblioteca de mapa **não é `react-native-maps`** como este documento e o Plano de Sprints descreviam — é **`@maplibre/maplibre-react-native`**, adotada por ser open source e não exigir chave de API do Google. Todas as menções a `react-native-maps` neste documento devem ser lidas como históricas. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-07)
+- **Descrição:** Esta feature implementa as telas de descoberta de hospitais: o **mapa** interativo com pins de hospitais e posição do usuário, a **lista** com busca por nome e ordenação, e a **navegação inferior** (Bottom Tabs) que organiza o app em 4 abas: Início, Hospitais, Mapa e Perfil. A migração de Drawer (atual) para Bottom Tabs é parte desta feature, pois a navegação de 1 polegar é mandatória para a persona paciente (mãos ocupadas, pressa, uma mão só).
 
   O mapa (`react-native-maps`) exibe hospitais ativos como pins `MapPin` em `primary`, com geofence renderizado como polígono translúcido. O FAB centraliza no GPS do usuário. Ao tocar em um pin, abre o card de detalhe rápido com nome, distância e nota — toque no card leva ao Detalhe do Hospital (F-06).
 
   A lista de hospitais oferece busca por nome (filtro local no client ou query parametrizada `GET /api/v2/hospitais?nome=X`) e ordenação por nota ou tempo médio. O empty state "Nenhum hospital perto de você" inclui CTA "Sugerir hospital" (E1-05), que envia uma sugestão para revisão administrativa.
 
-  A migração de navegação de Drawer → Bottom Tabs com 3 abas (Mapa, Hospitais, Perfil) segue estritamente o Padrão UI/UX v2.0 (§4.3), utilizando `CSBottomNav` com glass morphism.
+  A migração de navegação de Drawer → Bottom Tabs com 4 abas (Início, Hospitais, Mapa, Perfil) segue o Padrão UI/UX v2.0 (§4.3), utilizando `CSBottomNav` com glass morphism.
 
 - **User Stories vinculadas:** E1-03, E1-05, E6-01
 - **Critérios de aceite:**
@@ -294,7 +373,7 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
   5. Busca por nome filtra a lista em tempo real (< 300ms); sem resultados → `CSEmptyState` "Nenhum hospital encontrado com esse nome"
   6. Ordenação: padrão por nota (decrescente); alternável para tempo médio (crescente); opção visível no header da lista
   7. Sugestão de hospital (E1-05): CTA "Sugerir hospital" disponível no empty state do mapa e da lista; formulário simples (nome + endereço opcional) envia `POST /api/v2/hospitais/sugestoes`
-  8. Navegação Bottom Tabs (`CSBottomNav`) com 3 abas: Mapa (MapPin), Hospitais (Building2), Perfil (UserRound); glass morphism com blur 30px; crossfade de 200ms na troca de aba
+  8. Navegação Bottom Tabs (`CSBottomNav`) com 4 abas: Início (Home), Hospitais (Building2), Mapa (MapPin), Perfil (UserRound); glass morphism com blur 30px; crossfade de 200ms na troca de aba
   9. Drawer de navegação anterior removido; telas de Login/Cadastro integradas ao fluxo via stack navigation a partir da aba Perfil
 - **Regras de negócio aplicáveis:** N/A (feature de interface/descoberta)
 - **Dependências:** **F-01 (Hospitais cadastrados)** — sem hospital, o mapa fica vazio (estado normal: empty state). **F-06 (Indicadores)** — o card exibe nota que depende de agregação. Pode iniciar com dados mockados.
@@ -314,8 +393,8 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 
 - **ID:** F-08
 - **Épico:** Épico 6 — Experiência e Polimento (Cross)
-- **Prioridade:** P1 — o app funciona sem Design System refinado, mas a qualidade percebida pelo paciente (que está cansado
-- **Status de implementação:** 🟡 **Parcial** — `UserScreen` e `HomeScreen` já seguem o novo design (lucide-react-native, tokens de cor). Mas `LoginScreen` ainda usa assets antigos (doutor.gif, ícones PNG) e selos "HIPAA Compliant" (padrão americano, não brasileiro). Navegação é Drawer (perfil gestor), não Bottom Tabs (perfil paciente). Não há componentes padronizados de loading/empty/error. Sem verificação WCAG. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-08)/ansioso) é diretamente impactada por inconsistências visuais e falta de acessibilidade
+- **Prioridade:** P1 — o app funciona sem Design System refinado, mas a qualidade percebida pelo paciente (que está cansado/ansioso) é diretamente impactada por inconsistências visuais e falta de acessibilidade
+- **Status de implementação:** 🟡 **Funcional, não auditado** — Design System v2.0 aplicado (tokens, componentes `CS*`, `lucide-react-native`), assets antigos e selos "HIPAA Compliant" removidos em favor de LGPD, estados de loading/empty/error com retry nas telas principais, e a tela dedicada de **opt-in de notificações** no Perfil (E6-05, S8). **Ressalva que impede o ✅:** a conformidade **WCAG 2.2 AA foi implementada mas nunca auditada** — `accessibilityLabel`/`accessibilityRole` e alvos de 48dp existem no código, porém não houve verificação por ferramenta nem teste com usuário de leitor de tela (**V-07, §11**). O DoD desta feature só fecha com essa auditoria. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-08)
 - **Descrição:** Esta feature é transversal: aplica o **Design System v2.0** (Padrão UI/UX v2.0) a todas as telas do app, garantindo consistência visual (tokens de cor, tipografia Manrope+Inter, raios, sombras), substitui assets antigos (GIF, PNGs de ícones, selos "HIPAA") pelos componentes do novo padrão e ícones `lucide-react-native`, implementa **empty states, loading states e error states** em todas as telas, e garante **acessibilidade WCAG 2.2 AA** como gate de aceite.
 
   A migração visual inclui: correção dos badges de conformidade (trocar "HIPAA Compliant" por "LGPD", "Criptografia ponta a ponta", "Dados anônimos e agregados"), substituição de ícones PNG por `lucide-react-native`, aplicação dos componentes `CSButton*`, `CSTextField`, `CSCard`, `CSRatingStars`, `CSGeoStatusCard`, `CSFeedbackForm` em todas as telas, e remoção de assets obsoletos.
@@ -356,7 +435,7 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 - **ID:** F-09
 - **Épico:** Fase 0 (Estabilização) + Épico 5 (Privacidade)
 - **Prioridade:** P0 — segurança e LGPD não são negociáveis para um app que lida com dados de saúde e localização
-- **Status de implementação:** 🔴 **Não conforme** — violação crítica: `AuthServiceImpl.java` linha ~28 grava `request.password()` **direto no MongoDB sem hash**. Não há emissão de JWT (login apenas salva documento). Zero endpoints de consentimento/exclusão LGPD. Zero rate limiting. Selos "HIPAA Compliant" no frontend (padrão errado para Brasil). **Nenhum deploy pode ocorrer antes da Fase 0.** (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-09)
+- **Status de implementação:** ✅ **Conforme** — a violação crítica registrada na v2.0 (senha gravada em texto puro) foi **corrigida na Fase 0** e não existe mais: `UserServiceImpl` codifica via `passwordEncoder.encode()` e `AuthServiceImpl` compara via `passwordEncoder.matches()`. Hoje há JWT (access 15 min / refresh 30 d) com **rotação e blacklist de revogação no refresh**, logout server-side idempotente, envelope de erro padronizado (`GlobalExceptionHandler`), rate limiting (10/min em login-refresh, 60/min em públicos), consentimento LGPD no cadastro, **revogação auditada** (`PUT /contas/consentimentos`, art. 8º §5º) e exclusão de conta com anonimização. **Ressalva:** o teste de penetração básico (**V-04**) nunca foi executado e não há análise estática de segurança (SAST) na esteira. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-09)
 - **Descrição:** Esta feature implementa as **camadas de defesa** do sistema — diferente de F-02 (que cuida da autenticação do usuário), F-09 cuida da proteção da API e da privacidade do titular de dados. Inclui: envelope de erro padronizado, rate limiting em endpoints sensíveis, consentimento de localização em etapas com explicação clara (LGPD), aceite de termos e política de privacidade, e revogação de permissões.
 
   O consentimento é implementado como um **onboarding de 3 etapas**: (1) boas-vindas e explicação do valor, (2) pedido de localização com justificativa, (3) pedido de notificações (opcional). A permissão de localização é granular: o app explica que precisa de "Durante o uso do app" para o básico e "Sempre" apenas para detecção em segundo plano, informando o custo de bateria.
@@ -391,12 +470,108 @@ O MVP prioriza **zero fricção**: detecção por geofence nativo (sem drenar ba
 
 ---
 
+### Feature F-10: Moderação de Sugestões de Hospitais
+
+- **ID:** F-10
+- **Épico:** Épico 1 — Cadastro de Hospitais e Geofences
+- **Prioridade:** P1 — sem moderação, as sugestões públicas acumulam-se como `PENDENTE` e não geram valor; com ela, o mapa cresce de forma confiável
+- **Status de implementação:** ✅ **Backend funcional** — endpoints de listagem filtrável, aprovação e rejeição de sugestões existem e são protegidos por `ADMIN`, com transições `PENDENTE → APROVADA|RECUSADA` e trilha de auditoria. As telas mobile de moderação (`SugestoesPendentesScreen`, `RevisarSugestaoScreen`) existem, mas **a moderação sai do app do cidadão** por decisão de produto: a interface definitiva é o Painel Admin Web (**F-11, adiada**). Até lá, a moderação é operada pelos endpoints ou pelas telas legadas. (Ver `Relatorio-Aderencia-Codigo-vs-Features.md` §F-10)
+- **Descrição:** Esta feature permite que administradores revisem as sugestões de novos hospitais enviadas por usuários anônimos ou logados (E1-05). Ao aprovar, o admin vincula a sugestão a um hospital oficial completo, com geofence validado. Ao rejeitar, deve informar um motivo. Toda decisão é auditada (`revisadoPor`, `revisadoEm`, `motivoRecusa`) e a transição de status é irreversível.
+
+  O fluxo de aprovação reutiliza o formulário de hospital existente (F-01), pré-preenchendo nome e endereço a partir da sugestão. O admin completa ou corrige os dados (CNPJ, tipo, contato, geofence) e, ao salvar, o sistema cria o hospital e marca a sugestão como `APROVADA` com o `hospitalId` vinculado. A rejeição é uma ação mais simples, feita via modal com campo de motivo.
+
+- **User Stories vinculadas:** E1-06
+
+> ⚠️ **Correção (08/09/2026, auditoria de código morto):** os critérios 7 e 8
+> abaixo (telas mobile de fila/revisão) e o item de DoD correspondente
+> descrevem UI que foi **removida** — `SugestoesPendentesScreen`/
+> `RevisarSugestaoScreen` estavam registradas em `App.js` mas nenhuma
+> navegação do app chegava até elas, e o botão "Aprovar" pré-preenchia um
+> `HospitalFormScreen` que nunca existiu no cliente mobile (o CRUD de
+> hospital sempre foi exclusivo do futuro Painel Web, F-11). Os critérios
+> 1-6 e 9-10 (endpoints admin) permanecem válidos e implementados. Ver
+> `Auditoria-Codigo-Morto-Logica-Ambigua-Erros-Silenciosos-v1.0.md`.
+
+- **Critérios de aceite:**
+  1. Endpoint admin `GET /api/v1/hospitais/sugestoes` retorna sugestões filtráveis por `status` (`PENDENTE`, `APROVADA`, `RECUSADA`), ordenadas por `criadoEm` decrescente, paginadas; resposta `< 300 ms` (p95)
+  2. Endpoint admin `GET /api/v1/hospitais/sugestoes/{id}` retorna detalhe completo da sugestão, incluindo audit quando `APROVADA`/`RECUSADA`
+  3. Endpoint admin `POST /api/v1/hospitais/sugestoes/{id}/aprovar` recebe `{ hospitalId }` e vincula a sugestão a um hospital existente; atualiza `status = APROVADA`, `revisadoPor`, `revisadoEm`, `hospitalId`
+  4. Endpoint admin `POST /api/v1/hospitais/sugestoes/{id}/rejeitar` recebe `{ motivo }` (`@Size(min=5, max=500)`), atualiza `status = RECUSADA`, `revisadoPor`, `revisadoEm`, `motivoRecusa`
+  5. Transições permitidas apenas `PENDENTE → APROVADA` e `PENDENTE → RECUSADA`; tentativa de reaprovar/rejeitar uma sugestão já decidida retorna `409 CONFLITO` com mensagem pt-BR
+  6. Todos os endpoints de moderação exigem papel `ADMIN`; usuários comuns recebem `403 ACESSO_NEGADO`
+  7. Tela de fila de moderação no app lista sugestões pendentes com badge de status, nome, cidade/UF e data; inclui pull-to-refresh e `CSEmptyState`
+  8. Tela de revisão exibe detalhes da sugestão, botão "Aprovar e cadastrar hospital" (pré-preenche `HospitalFormScreen`) e "Rejeitar" (modal com motivo)
+  9. Feedback visual: toast/snackbar confirma ação e lista é atualizada automaticamente
+  10. Audit trail: todo evento de aprovação/rejeição registra id do admin, timestamp e motivo (no caso de rejeição)
+- **Regras de negócio aplicáveis:** N/A (infraestrutura de cadastro — habilita RN-01, RN-03, RN-05)
+- **Dependências:** F-01 (Cadastro e Gestão de Hospitais) fornece o formulário e a validação de geofence. F-07 (Mapa e Busca) contém E1-05 (sugestão pública), que gera os registros a serem moderados. F-10 depende de F-02 (Autenticação) apenas para identificar o admin via token JWT.
+- **Esforço estimado:** **S** (1 sprint). Justificativa: endpoints admin são CRUD simples com duas transições de status; frontend reutiliza telas e componentes existentes (`CSHospitalCard`, `CSButton`, `CSModal`, `HospitalFormScreen`). A maior atenção é na validação de transições de status e no audit trail. Estórias: 1.
+- **Riscos:**
+  - **Aprovação sem geofence criar hospital inválido:** mitigação — o fluxo de aprovação obriga o admin a passar pelo `HospitalFormScreen` completo (com validação de geofence) antes de vincular a sugestão.
+  - **Spam de sugestões falsas:** mitigação — rate limiting no endpoint público `POST /sugestoes`; moderação manual no MVP; futuro: reCAPTCHA/device fingerprinting.
+  - **Admin aprovar duplicata:** mitigação — verificar nome + endereço normalizado antes de criar hospital; exibir alerta de possível duplicata quando similaridade > threshold.
+  - **UI mobile de moderação ruim:** mitigação — reutilizar componentes do design system; se volume de sugestões for alto, evoluir para painel web na Fase 2.
+- **Critério de pronto (DoD específico):**
+  - Endpoints admin testados com usuário `ADMIN` (sucesso) e `USER` (403)
+  - Teste de transição de status: aprovar e rejeitar sugestões pendentes; tentar reaprovar retorna 409
+  - Tela de fila de moderação funcional no app, acessível apenas para admin
+  - Rejeição exige motivo e persiste audit
+  - Aprovação cria hospital com geofence válido e vincula `hospitalId` na sugestão
+  - Cobertura de testes unitários ≥ 70% nos novos métodos de serviço
+
+---
+
+### Feature F-11: Painel Administrativo Web (Hospitais + Georreferenciamento)
+
+- **ID:** F-11
+- **Épico:** Épico 7 — Painel Administrativo Web
+- **Prioridade:** P0 — a partir desta feature, **toda a gestão administrativa deixa de existir no app mobile** e passa a viver exclusivamente na aplicação web; sem ela, não há como operar o cadastro de hospitais e a moderação de sugestões (F-10) de forma apropriada ao perfil de uso (desktop, múltiplas camadas de mapa, formulários extensos).
+- **Status de implementação:** 🔴 **Inexistente — adiada por decisão do Product Owner (02/09/2026).** Nenhuma aplicação web foi iniciada. A decisão registrada é: *"O Painel ADMIN ainda não é prioritário, será desenvolvido depois que o app estiver todo desenvolvido sem pendências, nem débitos técnicos."* Em consequência, a prioridade de F-11 muda de **P0 para P2** e o Épico 7 sai do caminho crítico: ele só entra depois de fechados o Épico 8 (estabilização e desempenho), os débitos técnicos e as validações V-01..V-09. O `Plano-Tecnico-Painel-Administrativo-Web-v1.0.md` permanece válido como proposta e **não deve ser executado** antes desse marco.
+- **Descrição:** Aplicação web separada do app mobile, destinada exclusivamente a administradores (papel `ADMIN`), consumindo a mesma API REST do backend (nenhum endpoint novo é criado por esta feature além dos já previstos em E1/E1-06). Oferece:
+  1. **Listagem de todos os hospitais** cadastrados (ativos e inativos), com filtros por nome, tipo, status e por divisão geográfica (Região Administrativa, Região de Saúde, Macrorregião de Saúde).
+  2. **Visualização em mapa** com 4 camadas geográficas sobrepostas e alternáveis: Região Administrativa, Região Integrada de Desenvolvimento, Regiões de Saúde e Macrorregiões de Saúde — construídas a partir dos shapefiles em `D:\saude-monitor\multiplas_camadas_saude_14` (convertidos para GeoJSON e servidos pelo backend).
+  3. **Detalhe do hospital** ao clicar no ícone no mapa (ou na linha da lista): exibe todos os dados cadastrais, permite editar ou desativar. Hospital desativado passa a ser exibido com **ícone de hospital em cor cinza** (tanto na lista quanto no mapa), diferenciando-o visualmente do ativo (ícone colorido).
+  4. **Bloqueio de escrita sobre feedbacks**: o painel nunca expõe ação de criar/editar/excluir feedback de usuário — apenas indicadores agregados de leitura (nota média, N), reaproveitando os endpoints públicos de indicadores.
+  5. **Menu de navegação** fixo com as opções "Hospitais" (lista), "Mapa" (visão georreferenciada) e "Sugestões pendentes" (reaproveita a fila de moderação de F-10).
+- **User Stories vinculadas:** E7-01, E7-02, E7-03, E7-04, E7-05, E7-06, E7-07, E7-08, E7-09
+- **Critérios de aceite:**
+  1. Login web autentica via `POST /auth/login`; acesso ao painel exige papel `ADMIN` (usuário sem esse papel é redirecionado/rejeitado)
+  2. Listagem de hospitais consome `GET /hospitais` (variante admin, incluindo inativos), paginada e ordenável
+  3. Filtros combináveis por nome, tipo, status e por Região Administrativa/Região de Saúde/Macrorregião de Saúde
+  4. Mapa renderiza as 4 camadas de divisão geográfica como GeoJSON independentes, com toggle de visibilidade por camada
+  5. Pins de hospitais sobrepostos ao mapa; clique no pin ou na linha da lista abre a tela de detalhe (`GET /hospitais/{id}`)
+  6. Tela de detalhe permite editar (`PUT /hospitais/{id}`) com revalidação de geofence, e desativar/reativar (`PATCH /hospitais/{id}/status`)
+  7. Hospital inativo é exibido com ícone cinza (lista e mapa); hospital ativo mantém o ícone colorido padrão
+  8. Nenhuma tela do painel expõe formulário de escrita sobre feedbacks; indicadores aparecem apenas como leitura agregada
+  9. Menu fixo com "Hospitais", "Mapa" e "Sugestões pendentes" (esta última reaproveitando as telas equivalentes de F-10, agora migradas para a web)
+  10. Responsivo o suficiente para uso em desktop (resolução mínima alvo: 1366×768); não é requisito rodar em mobile
+- **Regras de negócio aplicáveis:** RN-19 (transparência dos indicadores públicos), RN-22 (integridade e imparcialidade do feedback — admin não altera)
+- **Dependências:** depende do backend de F-01 (Cadastro e Gestão de Hospitais) e F-10 (Moderação de Sugestões) já existirem — reaproveita os mesmos endpoints, sem exigir novos contratos de API. Depende da conversão dos shapefiles de `multiplas_camadas_saude_14` para GeoJSON (nova responsabilidade desta feature, documentada no plano técnico correspondente). Ver `02-arquitetura-tecnica/Plano-Tecnico-Painel-Administrativo-Web-v1.0.md` para stack, estrutura de pastas e consumo da API.
+- **Esforço estimado:** **L** (2 sprints/1 frente dedicada). Justificativa: é uma aplicação nova (não reaproveita telas mobile), com mapa multi-camada, CRUD completo e autenticação própria; compensado por não precisar criar endpoints novos no backend. Estórias: 9.
+- **Riscos:**
+  - **Volume/peso dos GeoJSON das 4 camadas administrativas** (arquivos de Macrorregiões chegam a ~400KB de shapefile): mitigação — simplificação de geometria (`mapshaper`/`topojson`) antes de servir ao cliente, cache no backend.
+  - **Divergência de nomenclatura entre bases** (ex.: "Sudoeste/Octogonal" vs. "Sudoeste"): mitigação — normalizar nomes de região no processo de importação, com relatório de auditoria (mesmo padrão já usado para hospitais em `07-dados/`).
+  - **Confusão de escopo entre app mobile e painel web**: mitigação — nenhuma tela administrativa remanescente no app mobile (F-01/F-10 migram integralmente para F-11); reforçar via este documento e revisão de PR.
+  - **Acesso indevido de admin a dados de feedback**: mitigação — nenhum endpoint de escrita de feedback é exposto ao papel `ADMIN` no backend (Spring Security), reforçado por ausência de UI correspondente.
+- **Critério de pronto (DoD específico):**
+  - Login exige papel `ADMIN`; usuário `USER` não acessa o painel
+  - Mapa exibe corretamente as 4 camadas com toggle, sobre dados reais de `multiplas_camadas_saude_14`
+  - Clique no pin/linha da lista abre detalhe correto do hospital
+  - Edição e desativação funcionam ponta a ponta; hospital desativado aparece cinza em lista e mapa
+  - Nenhuma ação de escrita sobre feedback é alcançável pela UI ou pela API a partir do papel `ADMIN`
+  - Filtros combináveis testados (nome, tipo, status, região)
+
+---
+
 ## 4. Mapa de Dependências entre Features
 
 ```mermaid
 graph TD
     F01["F-01: Cadastro e Gestão de Hospitais"] --> F03["F-03: Detecção Automática Entrada/Saída"]
     F01 --> F07["F-07: Mapa e Busca de Hospitais"]
+    F01 --> F10["F-10: Moderação de Sugestões de Hospitais"]
+    F01 --> F11["F-11: Painel Administrativo Web"]
+    F10 --> F11
     F02["F-02: Autenticação e Conta do Usuário"] --> F04["F-04: Visita Ativa e Cronômetro"]
     F02 --> F05["F-05: Feedback Pós-Saída"]
     F02 --> F06["F-06: Indicadores Públicos"]
@@ -407,6 +582,7 @@ graph TD
     F05 --> F06
     F01 --> F04
     F07 --> F06
+    F07 --> F10
     F09 --> F05
     F09 --> F07
 
@@ -472,8 +648,8 @@ Fase 4 (polimento):  F-08                →  [sobre tudo; incremental ou sprint
 | **Tempo médio de atendimento** | Mediana dos tempos de permanência das visitas finalizadas de pronto-atendimento (até 24h, excluindo `INTERNACAO`/`OBSERVACAO`). Mediana é robusta a outliers — uma espera de 14h não distorce o indicador como faria a média. |
 | **Nota média** | Média aritmética das notas 1–5 dos feedbacks dos últimos 90 dias. Exibida apenas com N ≥ 5. |
 | **N (amostra)** | Quantidade de avaliações no período. N ≥ 5 é o piso para exibição pública. |
-| **Check-in manual** | Alternativa de 1 toque quando o GPS está indisponível: o usuário seleciona o hospital em uma lista. Visita é registrada com flag `manual = true`. |
-| **Bottom Tabs** | Navegação inferior com 3 abas (Mapa, Hospitais, Perfil). Substitui o Drawer anterior. Navegação de 1 polegar — adequada ao contexto do paciente (pressa, mãos ocupadas). |
+| **Check-in manual** | Caminho de primeira classe em 1 toque: o usuário seleciona o hospital na lista e registra a visita (típico quando o GPS está indisponível/negado). Visita é registrada com flag `manual = true`. |
+| **Bottom Tabs** | Navegação inferior com 4 abas (Início, Hospitais, Mapa, Perfil). Substitui o Drawer anterior. Navegação de 1 polegar — adequada ao contexto do paciente (pressa, mãos ocupadas). |
 | **Glass morphism** | Efeito visual: fundo com opacidade 80% + `backdrop-blur` 20-40px + borda fantasma 20%. Usado no Bottom Nav e no card de geofence sobre o mapa. |
 | **DoD (Definition of Done)** | Critério de pronto: condições que uma feature deve atender para ser considerada concluída. Inclui o DoD geral do MVP (código revisado, testado, documentado) + critérios específicos da feature. |
 | **ADR (Architecture Decision Record)** | Registro de decisão de arquitetura. Referenciado nas features quando impactam implementação. Ex.: ADR-001 (JWT + BCrypt), ADR-002 (geofencing nativo). |
@@ -486,13 +662,17 @@ Fase 4 (polimento):  F-08                →  [sobre tudo; incremental ou sprint
 
 Além dos DoDs específicos de cada feature, toda feature considerada "concluída" deve atender:
 
-- ✅ Código revisado por pares e mergeado na branch principal
-- ✅ Testes unitários com cobertura ≥ 70% nas regras de negócio da feature
-- ✅ Contratos de API documentados (OpenAPI/Swagger) e testados via testes de integração
-- ✅ Verificação de acessibilidade (WCAG 2.2 AA) nos componentes novos da feature
-- ✅ Consentimento LGPD implementado e funcional na feature (quando aplicável)
-- ✅ Feature demo gravada (3 min máx.) demonstrando o fluxo completo em device real
-- ✅ Métricas de produto instrumentadas na feature (eventos de analytics para funil)
+| # | Critério | Situação em 02/09/2026 |
+|---|---|---|
+| DoD-1 | Código revisado por pares e mergeado na branch principal | ✅ **Atendido** — todo o código entra por PR revisado em `develop` |
+| DoD-2 | Testes unitários com cobertura ≥ 70% nas regras de negócio da feature | ⚠️ **Não verificável** — há 118 testes no backend e 166 no frontend, mas **nenhuma ferramenta de cobertura está configurada**; o número exigido nunca foi medido. Item **E8-08** |
+| DoD-3 | Contratos de API documentados (OpenAPI/Swagger) e testados via testes de integração | 🔴 **Não atendido** — não há dependência `springdoc-openapi` no projeto nem testes de integração com contexto Spring completo; os testes de controller usam `MockMvc standaloneSetup`. Itens **E8-09** e **E8-10** |
+| DoD-4 | Verificação de acessibilidade (WCAG 2.2 AA) nos componentes novos da feature | 🟡 **Parcial** — implementada no código, nunca auditada (ver F-08 e **V-07**) |
+| DoD-5 | Consentimento LGPD implementado e funcional na feature (quando aplicável) | ✅ **Atendido** — consentimento no cadastro, revogação auditada e exclusão de conta com anonimização |
+| DoD-6 | Feature demo gravada (3 min máx.) demonstrando o fluxo completo em device real | 🔴 **Não atendido** — nenhuma demo foi gravada. Bloqueado de fato pelo **§2.1** (não há fluxo fluido para demonstrar) |
+| DoD-7 | Métricas de produto instrumentadas na feature (eventos de analytics para funil) | 🔴 **Não atendido** — não há analytics no app; os KPIs de produto (taxa de resposta, abandono) **não são mensuráveis hoje**. Item **E8-11** |
+
+> **Consequência honesta:** pelo próprio DoD deste documento, **nenhuma feature está formalmente "concluída"** — 3 dos 7 critérios não são atendidos por nenhuma delas. Os status ✅ do §2 significam "implementado e testado em CI", não "pronto conforme o DoD". Fechar DoD-2, DoD-3, DoD-6 e DoD-7 é exatamente o escopo do **Épico 8**.
 
 ---
 
@@ -637,34 +817,36 @@ Durante a extração e organização das features a partir dos documentos de ref
 
 ## 11. Roteiro de Validação do MVP (Pré-Lançamento)
 
-Antes de declarar o MVP pronto para lançamento público, as seguintes validações holísticas devem ser executadas:
+Antes de declarar o MVP pronto para lançamento público, as seguintes validações holísticas devem ser executadas.
+
+> 🚧 **Situação em 02/09/2026: nenhuma das 12 validações foi executada.** As validações V-01 a V-09 dependem de um sistema utilizável e estão **bloqueadas pelo problema de desempenho do §2.1** — não há sentido em medir precisão de geofence, consumo de bateria ou usabilidade sobre uma API que responde em 109 s na primeira abertura. V-10 a V-12 são metas pós-lançamento e só podem ser aferidas depois do beta. A ordem de desbloqueio é: **Épico 8 (desempenho e estabilização) → V-03/V-04 → V-01/V-02/V-05 → V-06/V-07/V-08 → V-09 → lançamento**.
 
 ### 11.1 Validação técnica
 
-| # | Validação | Features cobertas | Critério de sucesso |
-|---|---|---|---|
-| V-01 | **Teste de campo de geofence** | F-01, F-03, F-04 | 3 hospitais reais, 8h de teste cada; precisão de detecção ≥ 90%; falsos positivos ≤ 5% |
-| V-02 | **Teste de bateria** | F-03 | 8h de monitoramento em background; consumo ≤ 5% da bateria (Android + iOS) |
-| V-03 | **Teste de carga da API** | F-02, F-06 | 100 req/s no endpoint de agregados; p95 < 300ms; 0 erros 5xx |
-| V-04 | **Teste de penetração básico** | F-02, F-09 | Senha nunca em texto puro; JWT expirado rejeitado; refresh token revogado inutilizável; rate limit funcional |
-| V-05 | **Teste de compatibilidade** | F-07, F-08 | Android 8, 10, 13, 14 + iOS 15, 16, 17; versão web (Chrome, Safari, Firefox) |
+| # | Validação | Features cobertas | Critério de sucesso | Situação |
+|---|---|---|---|---|
+| V-01 | **Teste de campo de geofence** | F-01, F-03, F-04 | 3 hospitais reais, 8h de teste cada; precisão de detecção ≥ 90%; falsos positivos ≤ 5% | ⛔ Bloqueada (§2.1) |
+| V-02 | **Teste de bateria** | F-03 | 8h de monitoramento em background; consumo ≤ 5% da bateria (Android + iOS) | ⛔ Bloqueada (§2.1) |
+| V-03 | **Teste de carga da API** | F-02, F-06 | 100 req/s no endpoint de agregados; p95 < 300ms; 0 erros 5xx | ⬜ Não executada — **é a primeira a executar**, pois mede exatamente o problema do §2.1 |
+| V-04 | **Teste de penetração básico** | F-02, F-09 | Senha nunca em texto puro; JWT expirado rejeitado; refresh token revogado inutilizável; rate limit funcional | ⬜ Não executada |
+| V-05 | **Teste de compatibilidade** | F-07, F-08 | Android 8, 10, 13, 14 + iOS 15, 16, 17; versão web (Chrome, Safari, Firefox) | ⬜ Não executada |
 
 ### 11.2 Validação de produto
 
-| # | Validação | Features cobertas | Critério de sucesso |
-|---|---|---|---|
-| V-06 | **Teste de usabilidade com pacientes reais** | F-04, F-05, F-07 | ≥ 10 usuários; jornada completa sem ajuda externa; tempo de feedback < 45s; NPS do app ≥ 8 |
-| V-07 | **Teste de acessibilidade** | F-08 | WCAG 2.2 AA auditado (ferramenta + manual); ≥ 1 usuário com deficiência visual completou a jornada |
-| V-08 | **Revisão LGPD** | F-02, F-05, F-09 | DPO ou consultor revisou consentimento, política de privacidade e fluxo de exclusão |
-| V-09 | **Teste de retenção (beta fechado)** | Todas | 30 dias de beta com ≥ 50 usuários; taxa de resposta de feedback ≥ 25%; retenção D7 ≥ 30% |
+| # | Validação | Features cobertas | Critério de sucesso | Situação |
+|---|---|---|---|---|
+| V-06 | **Teste de usabilidade com pacientes reais** | F-04, F-05, F-07 | ≥ 10 usuários; jornada completa sem ajuda externa; tempo de feedback < 45s; NPS do app ≥ 8 | ⛔ Bloqueada (§2.1) |
+| V-07 | **Teste de acessibilidade** | F-08 | WCAG 2.2 AA auditado (ferramenta + manual); ≥ 1 usuário com deficiência visual completou a jornada | ⬜ Não executada — gate do DoD de F-08 |
+| V-08 | **Revisão LGPD** | F-02, F-05, F-09 | DPO ou consultor revisou consentimento, política de privacidade e fluxo de exclusão | ⬜ Não executada |
+| V-09 | **Teste de retenção (beta fechado)** | Todas | 30 dias de beta com ≥ 50 usuários; taxa de resposta de feedback ≥ 25%; retenção D7 ≥ 30% | ⛔ Bloqueada (§2.1) |
 
 ### 11.3 Validação de negócio
 
-| # | Validação | Critério de sucesso |
-|---|---|---|
-| V-10 | **Hospitais com N ≥ 5** | ≥ 20 hospitais com avaliação pública válida em até 90 dias do lançamento |
-| V-11 | **Usuários ativos semanais** | ≥ 1.000 WAUs em até 90 dias |
-| V-12 | **Cobertura geográfica inicial** | ≥ 3 cidades com hospitais cadastrados e avaliações públicas |
+| # | Validação | Critério de sucesso | Situação |
+|---|---|---|---|
+| V-10 | **Hospitais com N ≥ 5** | ≥ 20 hospitais com avaliação pública válida em até 90 dias do lançamento | ⬜ Pós-lançamento |
+| V-11 | **Usuários ativos semanais** | ≥ 1.000 WAUs em até 90 dias | ⬜ Pós-lançamento |
+| V-12 | **Cobertura geográfica inicial** | ≥ 3 cidades com hospitais cadastrados e avaliações públicas | ⬜ Pós-lançamento |
 
 ---
 
@@ -697,6 +879,7 @@ Antes de declarar o MVP pronto para lançamento público, as seguintes validaç�
 | F-07 | `MapaScreen`, `HospitalListScreen`, `BottomNav` | `CSBottomNav`, `CSMapScreen`, `CSHospitalList`, `CSFloatingActionButton`, `CSEmptyState` | `react-native-maps` |
 | F-08 | Todas as telas (cross-cutting) | Design System completo (seção 5 Padrão UI/UX), `CSEmptyState`, `CSLoading`, `CSOfflineBanner`, `CSToast` | `lucide-react-native` |
 | F-09 | `OnboardingScreen` (3 etapas), `PrivacidadeScreen`, `TermosScreen` | `CSOnboarding`, `CSCheckbox`, `CSButtonPrimary`, `CSButtonSecondary` | `expo-location` (permissões) |
+| F-10 | `SugestoesPendentesScreen`, `RevisarSugestaoScreen`, `HospitalFormScreen` (pré-preenchido) | `CSHeader`, `CSHospitalCard`, `CSButtonPrimary`, `CSButtonSecondary`, `CSModal`, `CSEmptyState`, `CSToast` | — |
 
 ### 12.3 Sequência de implementação técnica por sprint
 
@@ -705,7 +888,7 @@ Com base na Árvore Tecnológica (Fase 0 → 1 → 2) e nas dependências do roa
 | Sprint | Duração | Foco | Features | Backend | Frontend | Infra |
 |---|---|---|---|---|---|---|
 | **S0** | 2 sem | Fundações | F-02, F-09 (segurança) | Hash BCrypt, JWT, GlobalExceptionHandler, rate limit, testes auth | — | CI/CD setup básico |
-| **S1** | 2 sem | Hospitais + Mapa | F-01, F-07 | CRUD hospital, GeoJSON validation, índice 2dsphere, endpoint público | Bottom Tabs, Mapa com pins, lista de hospitais | Seed de 10 hospitais mock |
+| **S1** | 2 sem | Hospitais + Mapa + Moderação de sugestões | F-01, F-07, F-10 | CRUD hospital, GeoJSON validation, índice 2dsphere, endpoint público, endpoints admin de sugestões | Bottom Tabs, Mapa com pins, lista de hospitais, tela de fila de moderação | Seed de 10 hospitais mock |
 | **S2** | 2 sem | Geofence core | F-03 (início) | Endpoints entrada/saída/heartbeat, `$geoIntersects`, job de expiração | `startGeofencingAsync`, `TaskManager`, card de geofence | Mock de geofences para teste |
 | **S3** | 2 sem | Geofence robustez + Visita UX | F-03 (conclusão), F-04 | Conflito de áreas, GPS interrompido, check-in manual, tipo permanência | `CSGeoStatusCard`, timer, prompt 12h, modo manual | Teste de campo ≥ 3 hospitais |
 | **S4** | 2 sem | Feedback | F-05 | Endpoint feedback, dedupe, validação | `CSFeedbackForm`, notificação local, lembrete, agradecimento | Teste de usabilidade feedback |
@@ -721,12 +904,14 @@ Com base na Árvore Tecnológica (Fase 0 → 1 → 2) e nas dependências do roa
 | F-01 | Hospitais cadastrados, geofences com área correta | Dashboard admin | 50 hospitais cadastrados; 0 geofences inválidos em produção |
 | F-02 | Cadastros, logins, taxa de conta criada pós-feedback | Analytics (evento `conta_criada`, `login`) | 20% dos usuários de feedback criam conta em 30 dias |
 | F-03 | Precisão de detecção, falsos positivos, consumo de bateria | Logs de visita + teste de campo | ≥ 90% detecções corretas; ≤ 5% falsos positivos; bateria ≤ 5%/dia |
-| F-04 | Uso de check-in manual, resposta ao prompt de 12h | Analytics (`checkin_manual`, `prompt_internacao_respondido`) | ≤ 30% das visitas são manuais; ≥ 40% respondem prompt de 12h |
+| F-04 | Uso de check-in manual, resposta ao prompt de 12h | Analytics (`checkin_manual`, `prompt_internacao_respondido`) | Manual como caminho de primeira classe sem penalizar o automático; ≥ 40% respondem prompt de 12h |
 | F-05 | Taxa de resposta, tempo médio, abandono | Analytics (`feedback_iniciado`, `feedback_enviado`, `feedback_abandonado`, duração) | ≥ 25% taxa de resposta; < 45s tempo médio; < 20% abandono |
 | F-06 | Hospitais com N ≥ 5, atualização ≤ 15 min | Query no banco + health check do job | 20 hospitais com N ≥ 5; 100% das atualizações em ≤ 15 min |
 | F-07 | Buscas realizadas, hospitais visualizados | Analytics (`busca_hospital`, `detalhe_hospital_aberto`) | ≥ 500 buscas/semana |
 | F-08 | Nota WCAG, tempo de carregamento, crashes | Lighthouse/axe + Crashlytics | WCAG AA 100%; p95 carregamento < 2s; crash-free ≥ 99.5% |
 | F-09 | Permissões concedidas, termos aceitos, rate limits disparados | Analytics + logs | ≥ 60% concedem localização; 100% aceitam termos; ≤ 1% de req bloqueadas por rate limit |
+| F-10 | Sugestões moderadas (tempo médio de fila), taxa de aprovação, rejeições com motivo | Query no banco + analytics | 100% das sugestões pendentes > 7 dias moderadas; taxa de aprovação acompanha; 0 rejeições sem motivo |
+| F-11 | Hospitais editados/desativados via painel, uso por camada de mapa, tempo até localizar um hospital via filtro | Logs de auditoria + analytics do painel web | 100% das operações de CRUD feitas via painel (zero mais via mobile); 0 incidentes de acesso indevido a feedback |
 
 ---
 
@@ -748,6 +933,20 @@ sequenceDiagram
         API->>DB: find({ ativo: true })
         DB-->>API: [hospitais com geofence]
         API-->>App: JSON (nome, tipo, coordenadas, geofence)
+    end
+
+    rect rgb(0, 97, 147, 0.1)
+        Note over App,DB,User: F-10: Moderação de sugestões (ADMIN)
+        User->>App: Sugere hospital anônimo/logado
+        App->>API: POST /hospitais/sugestoes
+        API->>DB: insertOne(SUGESTAO { status: PENDENTE })
+        DB-->>API: OK
+        API-->>App: { sugestao_id }
+        AdminApp->>API: GET /hospitais/sugestoes?status=PENDENTE
+        API->>DB: find({ status: PENDENTE })
+        DB-->>API: [sugestões]
+        AdminApp->>API: POST /hospitais/sugestoes/{id}/aprovar (hospitalId)
+        API->>DB: updateOne(SUGESTAO { status: APROVADA, hospitalId, revisadoPor, revisadoEm })
     end
 
     rect rgb(0, 106, 106, 0.1)
@@ -814,24 +1013,27 @@ sequenceDiagram
 
 ## 15. Entregáveis por Sprint (Checklist de Feature Sign-off)
 
-### Sprint 0 — Fundações (Features: F-02 parcial, F-09 parcial)
+### Sprint 0 — Fundações (Features: F-02 parcial, F-09 parcial) ✅ Concluído
 
-- [ ] Hash BCrypt implementado e testado (senha nunca em texto puro)
-- [ ] JWT access + refresh funcional com rotação
-- [ ] `GlobalExceptionHandler` padronizado com envelope pt-BR
-- [ ] Rate limiting configurado em `login` e endpoints públicos
-- [ ] Endpoint de exclusão de conta (`DELETE /usuarios/me`) funcional
-- [ ] Cadastro + login via API funcionais com validação
+- [x] Hash BCrypt implementado e testado (senha nunca em texto puro)
+- [x] JWT access + refresh funcional com rotação
+- [x] `GlobalExceptionHandler` padronizado com envelope pt-BR
+- [x] Rate limiting configurado em `login` e endpoints públicos
+- [x] Endpoint de exclusão de conta (`DELETE /usuarios/me`) funcional
+- [x] Cadastro + login via API funcionais com validação
 
-### Sprint 1 — Hospitais e Mapa (Features: F-01, F-07)
+### Sprint 1 — Hospitais, Mapa e Moderação de Sugestões (Features: F-01, F-07, F-10) ✅ Concluído
 
-- [ ] CRUD de hospital com validação de polígono GeoJSON
-- [ ] Índice `2dsphere` criado e verificado
-- [ ] Endpoint público `GET /hospitais` com filtro `?nome=`, `?lat=`, `?lon=`
-- [ ] Bottom Tabs implementados (Mapa, Hospitais, Perfil)
-- [ ] Mapa funcional com pins de hospitais + FAB de GPS
-- [ ] Lista de hospitais com busca por nome
-- [ ] 10 hospitais seedados para desenvolvimento
+- [x] CRUD de hospital com validação de polígono GeoJSON
+- [x] Índice `2dsphere` criado e verificado
+- [x] Endpoint público `GET /hospitais` com filtro `?nome=`, `?lat=`, `?lon=`
+- [x] Bottom Tabs implementados (Mapa, Hospitais, Perfil)
+- [x] Mapa funcional com pins de hospitais + FAB de GPS
+- [x] Lista de hospitais com busca por nome
+- [x] 10 hospitais seedados para desenvolvimento
+- [x] Endpoints admin de moderação de sugestões (`GET /hospitais/sugestoes`, `POST /hospitais/sugestoes/{id}/aprovar`, `POST /hospitais/sugestoes/{id}/rejeitar`)
+- [ ] ~~Tela de fila de moderação de sugestões no app (apenas admin)~~ — removida em 08/09/2026 (código morto/inacessível); migra para o Painel Web (F-11)
+- [ ] ~~Fluxo de aprovação pré-preenche formulário de hospital e vincula sugestão a hospital criado~~ — idem; navegava para uma rota inexistente
 
 ### Sprint 2 — Geofence Core (Features: F-03 início)
 
@@ -903,6 +1105,8 @@ sequenceDiagram
 | F-07 | 0.5 | 1 (pleno) | 0.25 | 0.25 | Baixa | 1 sprint |
 | F-08 | 0 | 1 (pleno) + 1 (design) | 1 | 1 | Média (volume) | 1-2 sprints |
 | F-09 | 0.5 | 0.5 | 0.5 | 0.25 | Média | 1 sprint |
+| F-10 | 0.5 | 0.5 (pleno) | 0.25 | 0.25 | Baixa | 1 sprint |
+| F-11 | 0.25 | 1 (pleno, web) | 0.5 | 0.5 | Média | 2 sprints |
 
 > **Time sugerido total:** 2 backend (1 sênior + 1 pleno), 2 mobile (1 sênior + 1 pleno), 1 QA, 1 designer de produto. Total: 6 pessoas em dedicação parcial (50-100% conforme sprint).
 

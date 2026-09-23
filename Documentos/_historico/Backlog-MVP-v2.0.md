@@ -51,7 +51,8 @@
 | E1-02 | P0 | Como administrador, devo **definir a área geográfica (geofence) de um hospital** como polígono GeoJSON sobre o mapa. | CA: polígono válido (fechado, ≥ 3 vértices, sem auto-interseção); renderizado no mapa; salvo como `geofence` no documento. | RF-08, RN-01 |
 | E1-03 | P0 | Como administrador, devo **listar hospitais ativos** para o app público (id, nome, tipo, geofence, indicadores). | CA: endpoint público retorna apenas hospitais ativos; geofence incluído para renderização; resposta < 300ms p95. | RF-05, RNF-02 |
 | E1-04 | P1 | Como administrador, devo **editar/desativar** um hospital e seu geofence. | CA: edição valida polígono novamente; desativar remove do app público imediatamente. | RF-08 |
-| E1-05 | P2 | Como usuário, devo **sugerir a inclusão de um hospital** não cadastrado (endpoint público de sugestão). | CA: sugestão cria registro pendente de aprovação; sem custo para o usuário anônimo. | RF-05 |
+| E1-05 | P1 | Como usuário, devo **sugerir a inclusão de um hospital** não cadastrado (endpoint público de sugestão). | CA: sugestão cria registro pendente de aprovação; sem custo para o usuário anônimo. | RF-05 |
+| **E1-06** | P1 | Como administrador, devo **revisar, aprovar e rejeitar sugestões públicas** de hospitais para manter a qualidade e confiabilidade do cadastro oficial. | CA: listagem paginada filtrável por status (`PENDENTE`, `APROVADA`, `RECUSADA`); detalhe da sugestão; aprovação vincula a um hospital criado; rejeição exige motivo; transições apenas `PENDENTE → APROVADA` e `PENDENTE → RECUSADA`; endpoints protegidos para `ADMIN`; tela de fila de moderação no app; audit trail de quem decidiu e quando. | E1-05 |
 
 ---
 
@@ -64,7 +65,7 @@
 | E2-03 | P0 | Como sistema, devo **expirar visitas presas apenas após 24h sem heartbeat** (não por tempo de permanência — esperas reais de 12h+ no SUS não podem ser cortadas). | CA: job de expiração roda periodicamente (ex.: 15min); visita com `ultimoHeartbeat` > 24h vira `EXPIRADA`; tempo parcial preservado; visita com heartbeats regulares permanece ativa indefinidamente. | RN-04, RN-23 |
 | E2-04 | P0 | Como sistema, devo **tratar conflito de áreas sobrepostas** escolhendo o hospital mais próximo. | CA: com 2 geofences contendo o ponto, escolhe a menor distância; se empate persistir, app pergunta em 1 toque. | RN-05 |
 | E2-05 | P1 | Como sistema, devo **recuperar visitas com GPS interrompido** por até 10 minutos. | CA: falha de GPS não encerra a visita imediatamente; após 10 min sem sinal, encerra com `GPS_INTERROMPIDO`. | RN-06 |
-| E2-06 | P0 | Como usuário com GPS desligado/permissão negada, devo poder **fazer check-in manual em 1 toque** como plano B. | CA: botão "Estou em um hospital" na home; seleção do hospital; visita manual com flag `manual=true`. | P1, P9, UI/UX §5 |
+| E2-06 | P0 | Como usuário, devo **fazer check-in manual em 1 toque** (caminho de primeira classe), selecionando o hospital da lista — essencial com GPS desligado, permissão negada ou iOS restritivo. | CA: botão "Estou em um hospital" na home/lista; seleção do hospital; visita manual com flag `manual=true`. | P1, P9, UI/UX §5 |
 | E2-07 | P0 | Como usuário, devo **ver minha visita ativa** (hospital + cronômetro) sem precisar abrir o app durante a permanência. | CA: card de visita ativa na home e notificação silenciosa persistente; atualização a cada minuto. | RF-02, UI/UX TimerBanner |
 | E2-08 | P1 | Como sistema, devo **ignorar visitas < 2 minutos** nas estatísticas públicas. | CA: filtro aplicado na agregação; visita curta permanece no histórico do usuário, mas não entra no agregado. | RN-07, RN-17 |
 | E2-09 | P0 | Como app, devo **enviar heartbeat a cada 30 minutos** enquanto houver visita ativa. | CA: heartbeat registra `ultimoHeartbeat`; ausência de 2h marca visita `SUSPEITA`; heartbeat retoma status `EM_ATENDIMENTO`; consumo de rede/bateria validado em teste de campo. | RN-23, RF-02 |
@@ -77,7 +78,7 @@
 | ID | Prioridade | Estória | Critérios de aceite (CA) | Ref. |
 |---|---|---|---|---|
 | E3-01 | P0 | Como usuário, devo **receber a notificação de feedback entre 1 e 5 minutos após a saída**. | CA: notificação local dispara após saída + delay configurável (1–5min); nunca dispara dentro do geofence. | RN-08, RF-04 |
-| E3-02 | P0 | Como usuário, devo **responder o feedback com até 4 perguntas em < 45s**, com progresso visível e botão "Pular" sempre presente. | CA: pergunta 1 (foi atendido?) → se "não", pula para nota; pergunta 2 (médico disponível?); pergunta 3 (fez triagem?); pergunta 4 (nota 1–5); chips de medicação/receita; comentário opcional; envio com nota apenas. | RN-10, RN-11, RF-04, P2 |
+| E3-02 | P0 | Como usuário, devo **responder o feedback em até 4 telas (< 45s)**, com progresso visível e botão "Pular" sempre presente, seguindo o fluxo ramificado abaixo. | **Fluxo de 4 telas (máx.) — ramificação invisível ao usuário:**<br/><br/>**Tela 1 — Triagem**<br/>• "Você passou pela triagem ao chegar na unidade?"<br/>• ✅ Sim → **Tela 2**<br/>• ❌ Não → **Tela 3** (pula especialidade)<br/><br/>**Tela 2 — Especialidade procurada + Atendimento** (só se triagem = Sim)<br/>• "Qual especialidade você procurava?" → select searchable (lista CNES/DATASUS)<br/>• "Conseguiu ser atendido por médico(a) desta especialidade?"<br/>  - ✅ Sim → **Tela 3**<br/>  - ❌ Não → **motivo** (radio obrigatório):<br/>    🔴 **LOTACAO** — Superlotação / espera excessiva<br/>    👨‍⚕️ **FALTA_MEDICO** — Falta de médico na especialidade<br/>    ⚪ **CLASSIFICACAO_RISCO** — Prioridade a casos mais graves (Protocolo Manchester: Vermelho/Laranja)<br/>    🚪 **OUTRO** — campo curto opcional<br/>• → **Tela 3**<br/><br/>**Tela 3 — Tratamento pela equipe** (sempre exibida)<br/>• "Como foi o tratamento dos funcionários da unidade com você?"<br/>• Escala 5 pontos + "Não interagi": Muito bem / Bem / Regular / Mal / Muito mal / Não interagi<br/>• → **Tela 4**<br/><br/>**Tela 4 — Nota geral + Comentário** (sempre exibida)<br/>• "De 1 a 5, como avalia sua experiência geral hoje?" → ★★★★★<br/>• "Quer deixar algum comentário?" (opcional, max 500 chars)<br/>• Botão "Enviar"<br/><br/>**Regras transversais:**<br/>• `especialidadeProcurada` **sempre capturada** se triagem = Sim (mesmo se não atendido) → permite indicador de "falta de médico por especialidade"<br/>• `motivoNaoAtendido = CLASSIFICACAO_RISCO` **não é gap** — card "Fluxo Correto" no painel admin (verde)<br/>• `motivoNaoAtendido = FALTA_MEDICO` → gap RH (vermelho no painel)<br/>• `motivoNaoAtendido = LOTACAO` → gap Capacidade/Fluxo (laranja no painel)<br/>• Frontend mostra label amigável `CASOS_MAIS_GRAVES_PRIORIDADE`; backend normaliza para `CLASSIFICACAO_RISCO`<br/>• Comentário opcional único no final; zero caixas de texto obrigatórias<br/>• Persistência local a cada tela; envio único no final (`POST /api/v1/feedback` com `visitaId`) | RN-10, RN-11, RF-04, P2 |
 | E3-03 | P0 | Como usuário, devo **responder o feedback em até 24h**, com no máximo 1 lembrete. | CA: após 24h, visita vira `SEM_FEEDBACK`; lembrete único disparado ~6h após a primeira notificação; nenhum incômodo além disso. | RN-09, P3 |
 | E3-04 | P0 | Como sistema, devo **bloquear feedback duplicado por visita**. | CA: 1 feedback por visita (unique index em `feedback.visita_id`); tentativa duplicada retorna erro amigável. | RN-12 |
 | E3-05 | P0 | Como usuário anônimo, devo **responder o feedback sem login**. | CA: fluxo anônimo funciona de ponta a ponta; feedback gravado com `usuario_id` nulo; dados não expõem identidade. | RN-13, RN-20, RF-04 |
@@ -114,11 +115,29 @@
 
 | ID | Prioridade | Estória | Critérios de aceite (CA) | Ref. |
 |---|---|---|---|---|
-| E6-01 | P0 | Como usuário, devo **navegar por Bottom Tabs** (Mapa, Hospitais, Perfil) conforme o novo padrão de navegação. | CA: navegação de 1 polegar; substituição do Drawer; telas existentes (Login/Cadastro) integradas ao fluxo. | UI/UX §4, P6 |
+| E6-01 | P0 | Como usuário, devo **navegar por Bottom Tabs** (Início, Hospitais, Mapa, Perfil) conforme o novo padrão de navegação. | CA: navegação de 1 polegar; substituição do Drawer; telas existentes (Login/Cadastro) integradas ao fluxo. | UI/UX §4, P6 |
 | E6-02 | P0 | Como usuário, devo **usar o Design System v2.0** (tokens, tipografia, componentes) em todas as telas do app. | CA: tokens aplicados (cores, raios, sombras); componentes do padrão (Button, RatingStars, FeedbackSheet etc.); remoção de assets antigos (GIF/PNG); selos LGPD no lugar de HIPAA. | UI/UX §5–6 |
 | E6-03 | P1 | Como usuário com deficiência, devo **usar o app com leitor de tela e contraste AA**. | CA: roles/labels de acessibilidade; alvos ≥ 48dp; contraste verificado; navegação por teclado em web. | RNF-08, P8 |
 | E6-04 | P1 | Como usuário, devo **ver estados de carregamento/vazio/erro** em todas as telas. | CA: LoadingState em carregamentos; EmptyState quando sem dados; erro com ação de retry. | UI/UX §5 |
 | E6-05 | P2 | Como usuário, devo **receber notificações locais com permissão explicada** (não obrigatória). | CA: opt-in claro; notificação de feedback e de visita ativa; desativar em Perfil. | RN-08, RNF-06 |
+
+---
+
+### Épico 7 — Painel Administrativo Web 🖥️
+
+> **Contexto:** por ser um aplicativo comunitário direcionado à população, o acesso administrativo **não fica no app mobile**. Toda a gestão (hospitais, sugestões, georreferenciamento) passa a ser feita por uma **aplicação web** dedicada ao administrador, consumindo os mesmos endpoints REST do backend (E1, E1-06). O app mobile permanece exclusivamente para o cidadão.
+
+| ID | Prioridade | Estória | Critérios de aceite (CA) | Ref. |
+|---|---|---|---|---|
+| E7-01 | P0 | Como administrador, devo **acessar uma aplicação web dedicada** com login administrativo (papel `ADMIN`), para gerenciar o sistema sem depender do app mobile da população. | CA: tela de login web autentica via `POST /auth/login` e exige papel `ADMIN`; usuário sem papel `ADMIN` é rejeitado; sessão mantém JWT (access + refresh). | RF-08, RNF-05 |
+| E7-02 | P0 | Como administrador, devo **listar todos os hospitais cadastrados** (ativos e inativos), para ter visão completa da rede. | CA: listagem paginada consome `GET /hospitais` (incluindo inativos, exclusivo para admin); exibe nome, tipo, status, região administrativa; ordenável. | E1-03, RF-08 |
+| E7-03 | P0 | Como administrador, devo **filtrar os hospitais** por nome, tipo, status (ativo/inativo) e por Região Administrativa, Região de Saúde ou Macrorregião de Saúde, para localizar rapidamente uma unidade. | CA: filtros combináveis; resultado atualiza lista e mapa; filtro por região usa o dado georreferenciado da camada correspondente. | RF-08 |
+| E7-04 | P0 | Como administrador, devo **visualizar os hospitais em um mapa** com camadas sobrepostas de **Região Administrativa**, **Região Integrada de Desenvolvimento**, **Regiões de Saúde** e **Macrorregiões de Saúde**, para entender a distribuição geográfica da rede. | CA: mapa renderiza os 4 polígonos de divisão administrativa/saúde como camadas independentes (toggle liga/desliga cada camada); pins de hospitais sobrepostos; dados de origem: `D:\saude-monitor\multiplas_camadas_saude_14` (convertidos para GeoJSON). | RF-08 |
+| E7-05 | P0 | Como administrador, devo **tocar/clicar no ícone de um hospital no mapa** e ser redirecionado à tela de detalhe daquela unidade, para consultar todos os seus dados cadastrais. | CA: clique no pin abre a tela de detalhe do hospital (`GET /hospitais/{id}`) com todos os campos cadastrais; hospitais inativos aparecem no mapa com **ícone cinza**. | E1-01, RF-08 |
+| E7-06 | P0 | Como administrador, devo **editar os dados cadastrais de um hospital** (nome, endereço, tipo, contato, geofence), para manter o cadastro atualizado. | CA: formulário de edição consome `PUT /hospitais/{id}`; revalida geofence (polígono fechado, ≥ 3 vértices); **não expõe nem permite alterar dados de feedback** dos usuários (somente leitura, se exibido, ou não exibido nesta tela). | E1-04, RF-08 |
+| E7-07 | P0 | Como administrador, devo **desativar um hospital**, para que ele deixe de aparecer no app público e passe a ser sinalizado no mapa administrativo com **ícone cinza** indicando inatividade. | CA: ação consome `PATCH /hospitais/{id}/status`; hospital desativado some do app público (E1-04) e some do app da população; no painel web, permanece visível no mapa/lista com marcador cinza distinto do marcador ativo (colorido). | E1-04, RF-08 |
+| E7-08 | P0 | Como administrador, **não devo poder alterar dados de feedback** dos usuários em nenhuma tela do painel, para preservar a integridade e a imparcialidade das avaliações públicas. | CA: nenhum endpoint de escrita de feedback (`PUT /feedbacks/{id}`) é exposto ao papel `ADMIN`; tela de detalhe do hospital, se exibir indicadores/feedbacks, apresenta-os apenas como leitura (somente exibição agregada). | RN-19, RN-22 |
+| E7-09 | P1 | Como administrador, devo **navegar por um menu** com as opções "Hospitais" (lista) e "Mapa", além do acesso à fila de moderação de sugestões (E1-06), para alternar entre as visões administrativas. | CA: menu lateral/topo fixo em todas as telas autenticadas; opção "Mapa" abre a visualização georreferenciada (E7-04); opção "Hospitais" abre a listagem (E7-02); item "Sugestões pendentes" reaproveita os endpoints de E1-06. | E1-06, RF-08 |
 
 ---
 
@@ -129,12 +148,15 @@
 | Sprint | Foco | Estórias |
 |---|---|---|
 | **S0 (pré)** | Segurança e fundações | F0-01, F0-02, F0-03, F0-05 |
-| **S1** | Hospitais + geofence admin | E1-01, E1-02, E1-03, E1-04 |
+| **S1** | Hospitais + geofence admin + moderação de sugestões | E1-01, E1-02, E1-03, E1-04, E1-05, E1-06 |
 | **S2** | Detecção de visitas (mobile + backend) | E2-01, E2-02, E2-06, E2-07, E2-09 |
 | **S3** | Robustez de visitas + feedback backend | E2-03, E2-04, E2-05, E2-10, E3-04, E3-05 |
 | **S4** | Feedback mobile + notificações | E3-01, E3-02, E3-03, E3-06 |
 | **S5** | Indicadores públicos + conta/privacy | E4-01..E4-04, E5-01, E5-02, E5-04 |
 | **S6** | Polimento + lançamento | E6-01..E6-04, E4-05, F0-04, E5-03, E5-05 |
+| **S7 (frente paralela)** | Painel Administrativo Web | E7-01..E7-09 |
+
+> **Observação sobre S7:** por ser uma **aplicação separada** (web, não mobile) consumindo a mesma API já madura a partir de S1, o Épico 7 pode ser conduzido **em paralelo** por outra frente/desenvolvedor a partir do fim de S1 (quando `hospitais` e `hospitais/sugestoes` já existem no backend), sem bloquear o cronograma do app mobile. Está listado como S7 apenas para fins de estimativa de esforço; não é sequencial obrigatório em relação a S2–S6.
 
 ---
 
@@ -172,6 +194,7 @@
 4. **E3 antes de E4 (agregados)** — agregado depende de feedbacks válidos.
 5. **E2-09 (heartbeat) antes de E2-03 (expiração)** — a expiração por 24h sem sinal só faz sentido com heartbeat implementado; ambos no mesmo sprint.
 6. **Teste de campo de geofence** antes de fechar o S2/S3 — calibra RN-01/RN-03, intervalo de heartbeat (RN-23) e o raio (proposta 100–150m), incluindo cenário de espera longa (visita ativa > 12h).
+7. **E1/E1-06 (backend de hospitais e sugestões) antes do Épico 7** — o painel administrativo web é somente consumidor da mesma API; não introduz endpoints novos além dos já previstos em E1.
 
 ---
 

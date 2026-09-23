@@ -26,9 +26,9 @@ O plano de sprints do **Clinical Sanctuary** organiza 31 estórias de usuário (
 | **Sprints de desenvolvimento** | 7 (S0 a S6, 2 semanas cada) |
 | **Time-base** | 3 pessoas: 1 Backend (BE), 1 Frontend (FE), 1 DevOps/QA |
 | **Velocity alvo** | 18–20 story points por sprint |
-| **Pontos totais estimados** | 130 story points (escala Fibonacci: 1, 2, 3, 5, 8, 13) |
+| **Pontos totais estimados** | 135 story points (escala Fibonacci: 1, 2, 3, 5, 8, 13) |
 | **Épicos** | 6 (E1–E6) + Fase 0 (estabilização) |
-| **Estórias** | 31 (todas do backlog v2.0) |
+| **Estórias** | 32 (todas do backlog v2.0) |
 | **Cerimônias** | Daily 15min · Planning 2h · Review 1h · Retro 1h · Refinement 1h (meio do sprint) |
 | **Ferramentas** | Jira/Linear (tracking) · Confluence/Notion (docs) · Slack/Teams (async) · GitHub (código) |
 
@@ -124,13 +124,13 @@ S0 (Segurança)
 
 ---
 
-## 3. Sprint S1 — Hospitais e Geofence Admin 🏥
+## 3. Sprint S1 — Hospitais, Geofence Admin e Moderação de Sugestões 🏥
 
-> **2 semanas · 16 story points · Depende de: S0 concluído**
+> **2 semanas · 21 story points · Depende de: S0 concluído**
 
 ### 3.1 Objetivo do sprint
 
-> **"Permitir que administradores cadastrem hospitais com áreas geográficas (geofence GeoJSON) no mapa, e que o app público liste os hospitais ativos com seus indicadores."**
+> **"Permitir que administradores cadastrem hospitais com áreas geográficas (geofence GeoJSON) no mapa, que o app público liste os hospitais ativos com seus indicadores, e que administradores revisem, aprovem e rejeitem sugestões públicas de novos hospitais."**
 
 ### 3.2 Estórias do sprint
 
@@ -140,6 +140,8 @@ S0 (Segurança)
 | E1-02 | P0 | Definição de geofence como polígono GeoJSON sobre o mapa | 5 | BE + FE | ➕ Nova |
 | E1-03 | P0 | Listagem de hospitais ativos para o app público (com indicadores) | 3 | BE + FE | ➕ Nova |
 | E1-04 | P1 | Edição e desativação de hospital/geofence | 3 | BE + FE | ➕ Nova |
+| E1-05 | P1 | Sugestão pública de hospital (endpoint + tela anônima) | 2 | BE + FE | ➕ Nova |
+| E1-06 | P1 | Moderação de sugestões: aprovar/rejeitar com audit trail | 5 | BE + FE | ➕ Nova |
 
 ### 3.3 Entregáveis esperados
 
@@ -149,10 +151,12 @@ S0 (Segurança)
 - [x] **Tela de cadastro de hospital no app**: mapa interativo (`react-native-maps`) com ferramenta de desenho de polígono; visualização do geofence salvo.
 - [x] **Tela de lista de hospitais** (modo público): Bottom Tab "Hospitais", renderização de cards com nome, tipo e indicadores (placeholder até S5).
 - [x] **Índice 2dsphere** criado e testado com queries `$geoIntersects` e `$near`.
+- [x] **Sugestão pública de hospital**: endpoint `POST /api/v1/hospitais/sugestoes` e tela no app para usuário anônimo/logado enviar proposta.
+- [x] **Moderação de sugestões**: endpoints admin `GET /api/v1/hospitais/sugestoes`, `POST /api/v1/hospitais/sugestoes/{id}/aprovar`, `POST /api/v1/hospitais/sugestoes/{id}/rejeitar`; tela de fila de moderação acessível apenas para admin; fluxo de aprovação pré-preenche formulário de hospital e vincula sugestão ao hospital criado; rejeição exige motivo e persiste audit trail.
 
 ### 3.4 Demo planejada
 
-> **"Cadastrar 3 hospitais reais (ex.: Santa Casa SP, HC SP, Hospital das Clínicas) com geofences desenhados no mapa, listá-los no app público com busca por nome e ver o polígono renderizado."**
+> **"Cadastrar 3 hospitais reais (ex.: Santa Casa SP, HC SP, Hospital das Clínicas) com geofences desenhados no mapa, listá-los no app público com busca por nome e ver o polígono renderizado; depois, enviar uma sugestão pública de novo hospital, acessar como admin, aprovar a sugestão preenchendo o formulário completo e ver o novo hospital ativo na lista pública."**
 
 ### 3.5 Riscos do sprint
 
@@ -161,6 +165,9 @@ S0 (Segurança)
 | Desenho de polígono no mapa mobile com UX ruim (biblioteca de edição limitada no RN) | Média | Médio | FE faz spike de 4h com `react-native-maps` Polygon edition; fallback: admin web simples (HTML+JS) para cadastro de geofence, app apenas exibe |
 | Validação GeoJSON complexa (auto-interseção, orientação) | Baixa | Médio | Usar biblioteca JTS (Java Topology Suite) ou `org.springframework.data.mongodb.core.geo`; se complexidade explodir, validação simplificada (apenas vértices e fechamento) |
 | Performance de `$near` em coleção pequena irrelevante, mas design precisa escalar | Baixa | Baixo | Índice 2dsphere cobre o cenário; teste de carga só no S6 |
+| Aprovação de sugestão sem geofence válido gera hospital inutilizável | Média | Alto | Fluxo de aprovação obriga passar pelo `HospitalFormScreen` completo com validação de geofence antes de vincular a sugestão |
+| Spam de sugestões falsas sobrecarrega moderação | Média | Médio | Rate limiting no endpoint público `POST /sugestoes`; moderação manual no MVP; futuro: reCAPTCHA/device fingerprinting |
+| UI mobile de moderação ruim para volume alto | Baixa | Médio | Reutilizar componentes do design system; se volume de sugestões for alto, evoluir para painel web na Fase 2 |
 
 ### 3.6 Definição de Pronto (DoD) do sprint
 
@@ -169,8 +176,12 @@ S0 (Segurança)
 - [x] Listagem pública paginada e com busca.
 - [x] Tela de mapa com renderização de polígono.
 - [x] Testes de integração para CRUD e validação de geofence.
+- [x] Sugestão pública funcional e criando registro `PENDENTE`.
+- [x] Moderação de sugestões: endpoints protegidos para admin, transições de status testadas, rejeição exige motivo, aprovação vincula hospital com geofence.
+- [x] Tela de fila de moderação no app, acessível apenas para admin, com atualização automática após aprovação/rejeição.
+- [x] Cobertura de testes unitários ≥ 70% nos métodos de moderação.
 
----
+----
 
 ## 4. Sprint S2 — Detecção de Visitas (Mobile + Backend) 📍
 
@@ -186,7 +197,7 @@ S0 (Segurança)
 |---|---|---|---|---|---|
 | E2-01 | P0 | Detecção automática de entrada (≥ 2 min no geofence) | 5 | FE + BE | ➕ Nova |
 | E2-02 | P0 | Detecção automática de saída (≥ 5 min fora do geofence) | 5 | FE + BE | ➕ Nova |
-| E2-06 | P0 | Check-in manual em 1 toque (fallback para GPS desligado) | 3 | FE + BE | ➕ Nova |
+| E2-06 | P0 | Check-in manual em 1 toque (caminho de primeira classe; essencial com GPS desligado/negado) | 3 | FE + BE | ➕ Nova |
 | E2-07 | P0 | Card de visita ativa com cronômetro (home + notificação persistente) | 3 | FE | ➕ Nova |
 | E2-09 | P0 | Heartbeat de presença a cada 30 minutos | 3 | FE + BE | ➕ Nova |
 
@@ -194,8 +205,7 @@ S0 (Segurança)
 
 - **E2-01 e E2-02 são indivisíveis**: entrada e saída formam o ciclo completo de uma visita; desenvolver uma sem a outra gera retrabalho de integração.
 - **E2-09 (heartbeat) é P0 e está junto com detecção básica**: o heartbeat é o que distingue "espera real no hospital" (12h+ no SUS) de "GPS preso". Sem ele, a expiração de 24h (E2-03 no S3) não tem como saber se o usuário ainda está no hospital. **Desenvolver detecção sem heartbeat é construir sobre premissa errada.**
-- **E2-06 (check-in manual) é o plano B**: se o geofencing nativo falhar (GPS desligado, permissão negada, iOS restritivo), o app ainda funciona. Mitiga o risco de dependência total do geofence.
-- **E2-07 (card de visita) é a interface visível**: sem ela, o usuário não sabe que foi detectado — a experiência "zero fricção" perde o feedback visual.
+- **E2-06 (check-in manual) é um caminho de primeira classe**: ao lado do fluxo automático (geofence), essencial com GPS desligado, permissão negada ou iOS restritivo, sem comprometer a fricção mínima. O app funciona com ou sem o manual. while (200- **E2-09 (heartbeat) é P0 e está junto com detecção básica**: o heartbeat é o que distingue "espera real no hospital" (12h+ no SUS) de "GPSpreso". Sem ele, a expiração de 24h (E2-03 no S3) não tem como saber se o usuário ainda está no hospital. **Desenvolver detecção sem heartbeat é construir sobre premissa errada.**
 
 ### 4.4 Migração crítica: `watchPositionAsync` → `startGeofencingAsync`
 
@@ -403,7 +413,7 @@ TaskManager.defineTask("GEOFENCE_TASK", ({ data, error }) => { /* checkin/checko
 | Risco | Prob. | Impacto | Mitigação |
 |---|---|---|---|
 | Cálculo de mediana em memória (Java) com performance ruim se N crescer | Baixa | Baixo | Para MVP com N < 1000, é irrelevante; cache materializado evita recomputação em cada request; reavaliar se N > 10.000 |
-| Usuário rejeitar permissão de localização e app perder funcionalidade core | Alta | Médio | Check-in manual (E2-06) já implementado; app continua funcional para consulta pública e feedback manual; comunicação clara de que sem localização, detecção automática não funciona |
+| Usuário rejeitar permissão de localização e app perder funcionalidade core | Alta | Médio | Check-in manual (E2-06) é um caminho de primeira classe ao lado do automático; app continua funcional para consulta pública e feedback; comunicação clara de que sem localização, detecção automática não funciona |
 | Onboarding complexo (múltiplos estados: primeira vez, retorno, revogação) | Média | Médio | FE usa máquina de estados finita para onboarding; testar todos os caminhos (permissão concedida, negada, revogada depois) |
 
 ### 7.6 Definição de Pronto (DoD) do sprint
@@ -429,7 +439,7 @@ TaskManager.defineTask("GEOFENCE_TASK", ({ data, error }) => { /* checkin/checko
 
 | ID | Prioridade | Estória | Pontos | Resp. | Tipo |
 |---|---|---|---|---|---|
-| E6-01 | P0 | Navegação por Bottom Tabs (Mapa, Hospitais, Perfil) | 5 | FE | 🔄 Refatorar |
+| E6-01 | P0 | Navegação por Bottom Tabs (Início, Hospitais, Mapa, Perfil) | 5 | FE | 🔄 Refatorar |
 | E6-02 | P0 | Design System v2.0 aplicado em todas as telas | 5 | FE | 🔄 Refatorar |
 | E6-03 | P1 | Acessibilidade WCAG AA (leitor de tela, contraste, alvos 48dp) | 3 | FE | ➕ Nova |
 | E6-04 | P1 | Estados de carregamento/vazio/erro em todas as telas | 2 | FE | ➕ Nova |
@@ -445,7 +455,7 @@ TaskManager.defineTask("GEOFENCE_TASK", ({ data, error }) => { /* checkin/checko
 
 ### 8.4 Entregáveis esperados
 
-- [x] **Bottom Tabs implementados**: 3 abas (Mapa, Hospitais, Perfil); substituição do Drawer navigation; navegação de 1 polegar; transições suaves.
+- [x] **Bottom Tabs implementados**: 4 abas (Início, Hospitais, Mapa, Perfil); substituição do Drawer navigation; navegação de 1 polegar; transições suaves.
 - [x] **Design System v2.0 aplicado**: tokens de cor, tipografia, raios, sombras em todas as telas; componentes padronizados (Button, RatingStars, FeedbackSheet, TimerBanner); remoção de assets antigos (GIF, PNGs de ícones); selos LGPD no lugar de "HIPAA Compliant".
 - [x] **Acessibilidade**: `accessibilityLabel` e `accessibilityRole` em componentes interativos; alvos de toque ≥ 48dp; contraste de texto ≥ 4.5:1 (AA); teste com TalkBack (Android) e VoiceOver (iOS).
 - [x] **Estados de UI**: `LoadingState` (skeleton/spinner), `EmptyState` (ilustração + mensagem), `ErrorState` (mensagem + botão retry) em todas as telas com dados assíncronos.
@@ -520,7 +530,7 @@ TaskManager.defineTask("GEOFENCE_TASK", ({ data, error }) => { /* checkin/checko
 |---|---|---|---|---|
 | E2-01 | Detecção automática de entrada — geofencing nativo + checkin API | 5 | FE + BE | S1 |
 | E2-02 | Detecção automática de saída — checkout + `duracaoMinutos` | 5 | FE + BE | E2-01 |
-| E2-06 | Check-in manual em 1 toque — fallback GPS desligado | 3 | FE + BE | S1 |
+| E2-06 | Check-in manual em 1 toque — caminho de primeira classe ao lado do automático (GPS desligado/negado) | 3 | FE + BE | S1 |
 | E2-07 | Card de visita ativa com cronômetro — home + notificação persistente | 3 | FE | E2-01 |
 | E2-09 | Heartbeat a cada 30 minutos — sinal de presença | 3 | FE + BE | E2-01 |
 
@@ -593,7 +603,7 @@ TaskManager.defineTask("GEOFENCE_TASK", ({ data, error }) => { /* checkin/checko
 
 | Estória ID | Descrição Resumida | Pontos | Resp. | Dep. |
 |---|---|---|---|---|
-| E6-01 | Bottom Tabs (Mapa, Hospitais, Perfil) — substituir Drawer | 5 | FE | — |
+| E6-01 | Bottom Tabs (Início, Hospitais, Mapa, Perfil) — substituir Drawer | 5 | FE | — |
 | E6-02 | Design System v2.0 em todas as telas — tokens, componentes, remoção assets antigos | 5 | FE | — |
 | E6-03 | Acessibilidade WCAG AA — leitor de tela, contraste, alvos 48dp | 3 | FE | E6-02 |
 | E6-04 | Estados de carregamento/vazio/erro em todas as telas | 2 | FE | — |
@@ -922,6 +932,103 @@ Para referência, as estórias que estão fora do MVP mas documentadas para a Fa
 | **DevOps/QA** | _A definir_ | | |
 
 > **Status:** Proposta de plano de sprints — validar e ajustar com o time completo durante a Planning do Sprint 0. Estimativas de story points são sugestivas e devem ser recalibradas pelo time.
+
+---
+
+## 20. Sprint S7 — Painel Administrativo Web (Frente Paralela) 🖥️
+
+> **2 sprints (~4 semanas) · 25 story points · Depende de: S1 concluído (backend de `hospitais` e `hospitais/sugestoes` disponível) · Conduzida em paralelo às sprints S2–S6, por não impactar o cronograma do app mobile**
+
+### 20.1 Objetivo do sprint
+
+> **"Entregar uma aplicação web dedicada ao administrador — fora do app mobile da população — para listar, filtrar, visualizar em mapa multi-camada (Regiões Administrativas, RIDE, Regiões de Saúde, Macrorregiões de Saúde) e gerenciar (editar/desativar) hospitais, reaproveitando a API já construída em S1, sem qualquer acesso de escrita a dados de feedback."**
+
+### 20.2 Estórias do sprint (Épico 7)
+
+| ID | Prioridade | Estória | Pontos | Resp. | Tipo |
+|---|---|---|---|---|---|
+| E7-01 | P0 | Login web administrativo (papel `ADMIN`) | 3 | FE Web | ➕ Nova |
+| E7-02 | P0 | Listar todos os hospitais (ativos e inativos) | 3 | FE Web | ➕ Nova |
+| E7-03 | P0 | Filtrar hospitais (nome, tipo, status, região) | 3 | FE Web | ➕ Nova |
+| E7-04 | P0 | Mapa com 4 camadas georreferenciadas | 8 | FE Web + BE | ➕ Nova |
+| E7-05 | P0 | Detalhe do hospital ao clicar no pin/lista | 2 | FE Web | ➕ Nova |
+| E7-06 | P0 | Editar hospital (reaproveita contrato de E1-04) | 2 | FE Web | ➕ Nova |
+| E7-07 | P0 | Desativar hospital com ícone cinza | 2 | FE Web | ➕ Nova |
+| E7-08 | P0 | Bloqueio de escrita sobre feedback | 1 | BE + FE Web | ➕ Nova |
+| E7-09 | P1 | Menu Hospitais / Mapa / Sugestões pendentes | 1 | FE Web | ➕ Nova |
+
+### 20.3 Entregáveis esperados
+
+- [ ] Aplicação web nova, publicada em ambiente próprio, autenticando via papel `ADMIN`.
+- [ ] Shapefiles de `D:\saude-monitor\multiplas_camadas_saude_14` convertidos para GeoJSON e servidos pelo backend como 4 camadas independentes.
+- [ ] Listagem e mapa de hospitais com filtros combináveis (nome, tipo, status, região).
+- [ ] Fluxo completo de detalhe → editar/desativar, com ícone cinza para inativo.
+- [ ] Fila de moderação de sugestões (E1-06/F-10) migrada do app mobile para este painel.
+- [ ] Nenhuma tela ou endpoint do painel permite escrever em dados de feedback.
+
+### 20.4 Riscos do sprint
+
+| Risco | Prob. | Impacto | Mitigação |
+|---|---|---|---|
+| Peso dos GeoJSON de macrorregiões degradar performance do mapa | Média | Médio | Simplificação de geometria (mapshaper/topojson) antes de servir; cache no backend |
+| Divergência de nomenclatura de região entre camadas | Média | Baixo | Normalização no processo de importação, com relatório de auditoria (padrão de `07-dados/`) |
+| Equipe também alocada nas sprints S2–S6 (contenção de recurso) | Média | Médio | Tratado como frente paralela com recurso dedicado (ex.: FE Web) para não competir com o time mobile |
+
+### 20.5 Referências
+
+- Backlog: `04-backlog/Backlog-MVP-v2.0.md` — Épico 7 (E7-01..E7-09)
+- Feature: `05-features/Features-MVP-v2.0.md` — F-11
+- Plano técnico (stack, pastas, consumo de API): `02-arquitetura-tecnica/Plano-Tecnico-Painel-Administrativo-Web-v1.0.md`
+
+---
+
+## 21. Sprint S8 — Pendências / Stretch (APÓS as 7 Sprints) 🧹
+
+> **2 semanas · 15 story points · Depende de: S6 concluído · Não inclui o Painel Admin (Sprint S7, seção 20) nem Épico 7/F-11**
+
+### 21.1 Contexto
+
+Após a conclusão das 7 sprints (S0–S6) e com o Painel Administrativo Web tratado como frente paralela (Sprint S7, seção 20), restou um conjunto de estórias **stretch / parcialmente cobertas** que não entraram no escopo prioritário das 7 sprints. Esta **Sprint S8** consolida essas pendências em uma entrega única para fechar o MVP mobile.
+
+### 21.2 Estórias do sprint
+
+| ID | Prioridade | Estória | Pontos | Resp. | Tipo | Status base |
+|---|---|---|---|---|---|---|
+| **E4-05 (UI)** | P0 | Ranking de hospitais — UI de ordenação por nota e tempo consumindo `GET /api/v1/hospitais/ranking` (backend já na develop) | 3 | FE | ➕ Nova | Backend pronto (PR #27) |
+| **F-07** | P0 | Mapa renderizando os polígonos/geofences dos hospitais + filtro geo (raio) consumindo `GET /api/v1/hospitais` — integração com navegação **4 abas** (Início, Hospitais, Mapa, Perfil); polígonos dos geofences renderizados no `react-native-maps`; filtro por raio; previously marked as "refatorar" status now aligned com a arquitetura 4-tab.
+| **E5-03** | P1 | Histórico pessoal de visitas e feedbacks do usuário logado + exportação de dados (LGPD) | 3 | FE + BE | ➕ Nova | Stretch adiado da S6 |
+| **E5-05** | P1 | Revogação nativa completa do consentimento de geolocalização (além do Perfil, também desligamento no SO) | 2 | FE | ➕ Nova | Parcial (Perfil + SO manual) |
+| **E6-05** | P1 | Tela dedicada de permissão/opt-in de notificações (independente do fluxo de feedback E3) | 2 | FE | ➕ Nova | Parcial (via fluxo E3) |
+
+### 21.3 Objetivo do sprint
+
+> **"Fechar as pendências do MVP mobile: tornar o mapa completo (hospitais + geofences + filtro geo), entregar a UI do ranking e os itens de privacidade/histórico/notificações que ficaram como stretch nas 7 sprints, com a navegação **4 abas** (Início, Hospitais, Mapa, Perfil) já estabelecida a partir da S6."**
+
+### 21.4 Entregáveis esperados
+
+- [ ] **UI do ranking (E4-05)**: lista de hospitais ordenável por nota e tempo, com filtro por tipo (público/privado) e paginação; tela dedicada consumindo o endpoint já mergeado.
+- [ ] **Mapa completo (F-07)**: polígonos das geofences dos hospitais renderizados no mapa; filtro por raio consumindo `GET /api/v1/hospitais`; integração visual da listagem no mapa; agora alinhado à **4 abas** (Início, Hospitais, Mapa, Perfil).
+- [ ] **Histórico + exportação (E5-03)**: tela no Perfil listando visitas e feedbacks do usuário logado; botão de exportação (CSV) atendendo ao direito de portabilidade LGPD.
+- [ ] **Revogação nativa completa (E5-05)**: revogar consentimento de localização no app e, quando aplicável, encaminhar para as configurações nativas do SO.
+- [ ] **Notificações opt-in (E6-05)**: tela dedicada de permissão de notificações, desacoplada do fluxo de feedback.
+
+### 21.5 DoD do sprint
+
+- [ ] Todos os endpoints consumidos estão na develop (E4-05 ranking) ou são criados nesta sprint.
+- [ ] Mapas renderizando geofences dos hospitais + filtro geo funcional — integrados à **4 abas** (Início, Hospitais, Mapa, Perfil).
+- [ ] Ranking ordenável por nota/tempo com filtro.
+- [ ] Histórico + exportação LGPD funcionais na aba Perfil.
+- [ ] Revogação de localização completa (app + SO).
+- [ ] Notificações com opt-in dedicado.
+- [ ] Suíte de testes frontend 100% verde + typecheck sem erros.
+
+### 21.6 Riscos do sprint
+
+| Risco | Prob. | Impacto | Mitigação |
+|---|---|---|---|
+| Renderização de muitos polígonos degradar performance do mapa mobile | Média | Médio | Simplificar geometria; carregar hospitais do raio em vez de todos; `react-native-maps` com polygon leve |
+| Exportação de dados (E5-03) com volume grande | Baixa | Baixo | Paginar/limitar e exportar assíncrono (job) se necessário |
+| Revogação nativa no SO com comportamento variável (Android x iOS) | Média | Médio | Usar `Linking.openSettings` para encaminhar às configurações; documentar comportamento por SO |
 
 ---
 
