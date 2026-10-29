@@ -10,6 +10,17 @@ Manual operacional do sistema de monitoramento hospitalar por geolocalização, 
 > aposentado em 22/10/2026 (M-060), com o keep-alive. Versão anterior
 > deste manual: histórico do git.
 
+> **Revisão 29/10/2026 — um repositório por área.** O monorepo `GabrielVogado/saude-monitor`
+> foi dividido em [`radar-saude-mobile`](https://github.com/devpointinnovations/radar-saude-mobile),
+> [`painel-admin-frontend`](https://github.com/devpointinnovations/painel-admin-frontend),
+> [`radar-saude-backend`](https://github.com/devpointinnovations/radar-saude-backend) e
+> [`radar-saude-docs`](https://github.com/devpointinnovations/radar-saude-docs) (este), na conta
+> devpointinnovations, com o histórico preservado. **Cada repositório homologa sozinho**: a
+> `master` do mobile gera o APK HML e a rc dele, a `master` do backend publica o backend HML e
+> a rc dele (§3.3). Caminhos como `frontend/...`, `backend/...`, `deploy/...` e `.github/...`
+> neste manual passam a ser a raiz do repositório da área. O que mudou e os passos de conta
+> pendentes: [`Migracao-Repositorios-devpointinnovations-2026-10-29.md`](./Migracao-Repositorios-devpointinnovations-2026-10-29.md).
+
 ---
 
 ## 1. Visão Geral
@@ -68,6 +79,15 @@ feature/* ──► develop ──► master ──► release/<tag>
 2. Desenvolva, commite e abra PR para `develop`.
 
 ### 3.3 Promoção para homologação
+
+> **Desde 29/10/2026 a promoção é por repositório** (mobile e backend; o painel admin não
+> tem homologação). Os passos abaixo valem para cada um, com estas diferenças: no
+> **backend**, o `X.Y.Z` vem do `version` do `build.gradle` e o `cd-homologacao.yml` só
+> publica o backend HML e cria a tag e a Release; no **mobile**, o `X.Y.Z` vem do
+> `app.json` e o `cd-homologacao.yml` só gera o APK HML, a tag e a Release com o APK. Se
+> o app depende de uma mudança da API, **promova o backend primeiro**. O registro em
+> [`homologacoes/`](./homologacoes/) cita o par testado (APK `rc.N` + backend `rc.M`).
+
 1. (Opcional) Se a entrega muda a versão, suba `expo.version` em `frontend/app.json`
    num PR para a `develop` antes da promoção. É dele que sai o `X.Y.Z` da tag.
 2. Abra um **Pull Request** de `develop` → `master`. **Só de `develop`:** o check
@@ -129,7 +149,7 @@ feature/* ──► develop ──► master ──► release/<tag>
 1. Valide em **homologação** (`master`, a última `vX.Y.Z-rc.N`) antes de fixar a versão.
 2. No GitHub: **Actions → Release - Gerar branch de produção → Run workflow**, informando a **rc validada** (ex.: `v1.0.0-rc.3`).
 3. O workflow cria a branch **`release/1.0.0`** a partir **dessa tag** — não da ponta da `master`, que pode já ter commits ainda não homologados.
-4. O mesmo workflow **dispara** o deploy do backend de produção e o `cd-producao.yml`, que gera o **AAB** e o anexa à GitHub Release `v1.0.0`. (Disparo explícito desde 14/10/2026: um push feito com o `GITHUB_TOKEN` não aciona outros workflows, então o gatilho de `push` em `release/**` nunca rodava para a branch criada aqui.)
+4. O mesmo workflow **dispara** o deploy do backend de produção e o `cd-producao.yml` (desde 29/10/2026, cada repositório tem o seu `release.yml`: o do backend dispara o deploy, o do mobile o AAB), que gera o **AAB** e o anexa à GitHub Release `v1.0.0`. (Disparo explícito desde 14/10/2026: um push feito com o `GITHUB_TOKEN` não aciona outros workflows, então o gatilho de `push` em `release/**` nunca rodava para a branch criada aqui.)
 5. Envie o `.aab` da Release na Play Console (*Produção* ou *Teste fechado* → *Criar nova versão*). Na primeira vez, ative o Play App Signing com a chave de release como chave de upload ([`deploy/android/README.md`](../../deploy/android/README.md)).
 6. Após validar em produção, faça merge de `release/1.0.0` de volta em `master` (e `develop`).
 
@@ -138,6 +158,11 @@ feature/* ──► develop ──► master ──► release/<tag>
 ## 4. CI/CD
 
 ### 4.1 Workflows
+
+> Desde 29/10/2026 os workflows estão divididos: `cd-backend-google.yml` só no
+> radar-saude-backend; `cd-mobile-apk.yml`, `cd-mobile-eas.yml` e `cd-producao.yml` só no
+> radar-saude-mobile; `cd-homologacao.yml`, `release.yml` e `alarme-cd.yml` nos dois, cada
+> um com a sua parte; `ci.yml` e `pr-origem-master.yml` nos três repositórios de código.
 
 | Workflow | Gatilho | Ação |
 |----------|---------|------|
