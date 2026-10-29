@@ -1,0 +1,18 @@
+# Configuração de agentes de IA e processo do agente: não sobem (decisão do PO, 03/09/2026)
+.claude/
+CLAUDE.md
+.opencode/
+.spec/
+.agents/
+skills-lock.json
+skill-observations/
+skill-updates/
+
+# Sistema e editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Travas temporárias do LibreOffice
+.~lock.*#

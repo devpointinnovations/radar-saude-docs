@@ -1,7 +1,14 @@
 # 📚 Índice Central da Documentação — saude-monitor
 
 > **Sistema de Monitoramento Hospitalar por Geolocalização (Clinical Sanctuary)**
-> Última atualização: 25/10/2026 · Responsável: Gabriel Vogado
+> Última atualização: 29/10/2026 · Responsável: Gabriel Vogado
+
+---
+
+## 📌 Revisão 29/10/2026 — Um repositório por área (devpointinnovations)
+
+**O que mudou:** a pedido do PO, o monorepo `GabrielVogado/saude-monitor` virou quatro repositórios públicos na conta devpointinnovations, com o histórico preservado: `radar-saude-mobile`, `painel-admin-frontend`, `radar-saude-backend` e este `radar-saude-docs` (com `doc/tutorial-usuario/` e `site/`). Cada repositório tem o CI da sua área e a homologação passa a ser por repositório. Caminhos `frontend/`, `admin/`, `backend/`, `deploy/` e `.github/` citados nos documentos passam a ser a raiz do repositório da área; PRs `#N` antigos são do repositório antigo. Registro e passos de conta pendentes em [`10-git-flow/Migracao-Repositorios-devpointinnovations-2026-10-29.md`](./10-git-flow/Migracao-Repositorios-devpointinnovations-2026-10-29.md); `10-git-flow/MANUAL.md` (§3.3, §3.4, §4.1) e `Historico-Melhorias.md` (M-069) atualizados.
+**Sem mudança:** `De-Para-Backlog-Features.md` (infraestrutura do repositório, sem estória entregue).
 
 ---
 
@@ -489,6 +496,11 @@ Documentos/
 │   ├── Arquitetura de Resiliência, Segurança e Evolução Contínua.md ← SDD: rate limit, migrations, testes de carga, feature flags, JWT/JWKS
 │   └── Plano-Implantacao-Cache-Fila-Resiliencia-v1.0.md ← plano de implantação (7 fases) para cache/fila/resiliência — proposta, ainda não implementado
 │
+├── 10-git-flow/                              ← fluxo de trabalho, ambientes, CI/CD e homologação
+│   ├── MANUAL.md                             ← git-flow, ambientes, promoção, workflows, secrets e qualidade
+│   ├── homologacoes/                         ← um registro por rc (o que entrou, roteiro, resultado)
+│   └── Migracao-Repositorios-devpointinnovations-2026-10-29.md ← divisão do monorepo em quatro repositórios
+│
 ├── De-Para-Backlog-Features.md               ← status estória × feature (fonte de verdade de status)
 │
 └── _historico/                               ← documentos das fases anteriores (preservados, não editar)
@@ -534,6 +546,7 @@ Documentos/
 | 15 | [Auditoria — Código Morto, Lógica Ambígua e Erros Silenciosos](./08-analise%20tecnica/Auditoria-Codigo-Morto-Logica-Ambigua-Erros-Silenciosos-v1.0.md) | 1.0 | 🟡 Em correção | 19 achados (backend + frontend) com plano de correção priorizado P0–P3 e status por item. Commit-base `27ee9e6`. |
 | 16 | [Arquitetura de Resiliência, Segurança e Evolução Contínua](<./09-melhoria-continua/Arquitetura de Resiliência, Segurança e Evolução Contínua.md>) | — | 🟡 Proposta | SDD: rate limit (Token/Leaky Bucket + Redis), migrations versionadas, testes de carga (k6), testes A/B (feature flags) e JWT com expiração curta + refresh + JWKS/rotação de chaves. Não estava indexado aqui até 09/09/2026, apesar de já existir no repositório. |
 | 17 | [Plano de Implantação — Cache, Fila e Resiliência](./09-melhoria-continua/Plano-Implantacao-Cache-Fila-Resiliencia-v1.0.md) | 1.0 | 🟡 Proposta | Diagnóstico técnico (arquivo:linha) das leituras/escritas pesadas e dos 4 jobs `@Scheduled` possivelmente não confiáveis no Cloud Run atual; plano em 7 fases (otimizações → Mongock → feature flags → cache Upstash/rate limit → fila Cloud Tasks/Scheduler → JWT RS256/JWKS → k6), aplicando o item 16. Nenhuma fase implementada ainda. |
+| 18 | [Migração para repositórios por área](./10-git-flow/Migracao-Repositorios-devpointinnovations-2026-10-29.md) | 29/10/2026 | 🟡 Em andamento | Para onde foi cada pasta do monorepo, como o histórico foi separado, o que muda na homologação e os passos de conta do PO |
 
 ---
 

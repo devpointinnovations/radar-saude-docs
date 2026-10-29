@@ -3644,3 +3644,36 @@ avaliação continua bem dentro dos 90 dias em que fica ligada à conta (DAD-01 
   (`analises/Funcionamento-Offline-App-2026-10-23.md`, pasta do projeto).
 - Precisa de teste de campo: entrar com internet, sair sem rede, esperar mais de 45 min e reconectar.
   O esperado é a visita aparecer como Finalizada com o tempo real.
+
+---
+
+## M-069 — Um repositório por área na conta devpointinnovations
+
+**Data:** 29/10/2026 · **PRs:** painel-admin-frontend #1, radar-saude-backend #1, radar-saude-mobile #1 e o PR deste registro no radar-saude-docs · **Origem:** pedido do PO ("cada setor terá seu repositório próprio")
+
+### Como era
+
+- Um monorepo (`GabrielVogado/saude-monitor`) com app, painel, backend, documentação e site.
+  Cada PR rodava o CI das três áreas de código, e um merge na `master` gerava uma rc única com
+  o APK e o backend de homologação juntos.
+
+### O que mudou
+
+- Quatro repositórios públicos em devpointinnovations, com o histórico de cada pasta preservado
+  (`develop`, `master` e as tags `v1.0.0-rc.1` a `rc.10`) e os commits antigos do Claude
+  reescritos no nome do PO, sem as linhas de sessão.
+- CI por área, trava de contagem com uma área só e rulesets exigindo o check da área.
+- Homologação por repositório: rc do backend a partir do `build.gradle` (`version = '1.0.0'`),
+  rc do app a partir do `app.json`; backend promovido antes do app quando há dependência.
+- SonarQube Cloud na organização devpointinnovations; WIF do Google Cloud com o repositório
+  novo do backend.
+- Registro completo em `10-git-flow/Migracao-Repositorios-devpointinnovations-2026-10-29.md`.
+
+### O que ficou de fora
+
+- Passos de conta do PO: segredos do Actions, projetos no SonarQube Cloud, comandos `gcloud`
+  do WIF, rulesets, branch padrão `develop` e remoção da `main` de cada repositório.
+- Releases com os APKs das rc 1 a 10, issues e PRs ficam no repositório antigo.
+- Os documentos antigos continuam citando `frontend/`, `backend/` e PRs `#N` do monorepo; a
+  nota do índice explica a correspondência em vez de reescrever cada caminho.
+
